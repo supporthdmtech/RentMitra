@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+<template id="__bundler_thumbnail" data-bg-color="#4f46e5"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#4f46e5"/><path d="M30 49 L50 32 L70 49 V68 Q70 71 67 71 H33 Q30 71 30 68 Z" fill="#fff"/><text x="50" y="65" text-anchor="middle" font-family="sans-serif" font-weight="800" font-size="22" fill="#4f46e5">₹</text></svg></template>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 16px; background: linear-gradient(135deg, #f5f3ff 0%, #f0f9ff 100%); font-family: 'Inter', sans-serif; }
+  a { color: #2563eb; text-decoration: none; }
+  a:hover { color: #1d4ed8; }
+  button { font-family: 'Poppins', sans-serif; }
+</style>
+</helmet>
+
+<div style="max-width: 1400px; margin: 0 auto;">
+  <div style="margin-bottom: 32px;">
+    <h1 style="font-family: 'Poppins', sans-serif; font-size: 36px; font-weight: 800; color: #1a1a1a; margin: 0 0 8px;">RentMitra</h1>
+    <p style="font-size: 16px; color: #6b7280; margin: 0;">Property Management App Design — Friendly, energetic, and built for Indian landlords</p>
+  </div>
+
+  <!-- SCREEN 1: Dashboard Overview -->
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 48px;">
+    <div style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.1); height: fit-content;">
+      <!-- Status Bar -->
+      <div style="background: #1a1a1a; color: white; padding: 8px 16px; display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
+        <span>9:41</span>
+        <div style="display: flex; gap: 4px; align-items: center;">
+          <span>📶</span><span>📡</span><span>🔋</span>
+        </div>
+      </div>
+      <!-- Screen Content -->
+      <div style="padding: 0;">
+        <!-- Header -->
+        <div style="background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%); padding: 28px 20px; color: white;">
+          <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 20px;">
+            <div>
+              <div style="font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: 700;">Welcome, Owner</div>
+              <div style="font-size: 12px; opacity: 0.9; margin-top: 4px;">September 2026</div>
+            </div>
+            <div style="width: 40px; height: 40px; background: rgba(255,255,255,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px;">👤</div>
+          </div>
+          <!-- Income Summary -->
+          <div style="background: rgba(255,255,255,0.12); border-radius: 14px; padding: 16px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2);">
+            <div style="font-size: 11px; opacity: 0.85; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">This Month's Income</div>
+            <div style="font-family: 'Poppins', sans-serif; font-size: 32px; font-weight: 800;">₹75,000</div>
+            <div style="font-size: 11px; opacity: 0.8; margin-top: 6px;">From 2 properties</div>
+          </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div style="padding: 20px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; border-bottom: 1px solid #f0f0f0;">
+          <div style="background: #f0fdf4; border-radius: 12px; padding: 14px; text-align: center;">
+            <div style="font-size: 11px; color: #059669; font-weight: 600; margin-bottom: 6px;">✓ PAID</div>
+            <div style="font-family: 'Poppins', sans-serif; font-size: 18px; font-weight: 700; color: #059669;">₹50K</div>
+            <div style="font-size: 10px; color: #6b7280; margin-top: 4px;">2 tenants</div>
+          </div>
+          <div style="background: #fffbeb; border-radius: 12px; padding: 14px; text-align: center;">
+            <div style="font-size: 11px; color: #f59e0b; font-weight: 600; margin-bottom: 6px;">⏱ PENDING</div>
+            <div style="font-family: 'Poppins', sans-serif; font-size: 18px; font-weight: 700; color: #f59e0b;">₹25K</div>
+            <div style="font-size: 10px; color: #6b7280; margin-top: 4px;">1 overdue</div>
+          </div>
+          <div style="background: #fef2f2; border-radius: 12px; padding: 14px; text-align: center;">
+            <div style="font-size: 11px; color: #dc2626; font-weight: 600; margin-bottom: 6px;">✕ OVERDUE</div>
+            <div style="font-family: 'Poppins', sans-serif; font-size: 18px; font-weight: 700; color: #dc2626;">0 days</div>
+            <div style="font-size: 10px; color: #6b7280; margin-top: 4px;">Maximum</div>
+          </div>
+        </div>
+
+        <!-- Properties -->
+        <div style="padding: 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+            <div style="font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 700;">Your Properties</div>
+            <a href="#" style="font-size: 12px; color: #2563eb; font-weight: 600;">+ Add</a>
+          </div>
+          <!-- Property 1 -->
+          <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border: 1px solid #bfdbfe; border-radius: 12px; padding: 16px; margin-bottom: 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
+              <div>
+                <div style="font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 700; color: #1a1a1a;">Mumbai 2-BHK</div>
+                <div style="font-size: 12px; color: #6b7280; margin-top: 2px;">Vihar Nagar • 2 tenants</div>
+              </div>
+              <div style="background: white; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 600; color: #2563eb;">2/2 Paid</div>
+            </div>
+            <div style="height: 6px; background: #dbeafe; border-radius: 3px; overflow: hidden;">
+              <div style="height: 100%; background: linear-gradient(90deg, #2563eb 0%, #7c3aed 100%); width: 100%; border-radius: 3px;"></div>
+            </div>
+          </div>
+          <!-- Property 2 -->
+          <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border: 1px solid #fcd34d; border-radius: 12px; padding: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
+              <div>
+                <div style="font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 700; color: #1a1a1a;">Delhi PG</div>
+                <div style="font-size: 12px; color: #6b7280; margin-top: 2px;">Malviya Nagar • 5 rooms</div>
+              </div>
+              <div style="background: white; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 600; color: #f59e0b;">4/5 Paid</div>
+            </div>
+            <div style="height: 6px; background: #fde68a; border-radius: 3px; overflow: hidden;">
+              <div style="height: 100%; background: linear-gradient(90deg, #f97316 0%, #ec4899 100%); width: 80%; border-radius: 3px;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer Home Indicator -->
+        <div style="background: #f9f9f9; border-top: 1px solid #f0f0f0; padding: 12px; text-align: center;">
+          <div style="width: 32px; height: 4px; background: #1a1a1a; border-radius: 2px; margin: 0 auto;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INFO PANEL -->
+    <div style="padding: 20px;">
+      <h2 style="font-family: 'Poppins', sans-serif; font-size: 18px; font-weight: 700; margin: 0 0 16px; color: #1a1a1a;">Dashboard Overview</h2>
+      <ul style="margin: 0; padding: 0; list-style: none; font-size: 14px; line-height: 1.8; color: #4b5563;">
+        <li style="margin-bottom: 12px;"><strong>Real-time income tracking</strong> — See all rent payments at a glance with color-coded status</li>
+        <li style="margin-bottom: 12px;"><strong>Property progress bars</strong> — Visual indication of payment collection for each property</li>
+        <li style="margin-bottom: 12px;"><strong>Quick add button</strong> — Tap "+ Add" to onboard new properties instantly</li>
+        <li style="margin-bottom: 12px;"><strong>Income summary card</strong> — Glass-morphism design with monthly total and property count</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SCREEN 2: Add Property -->
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 48px;">
+    <div style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.1); height: fit-content;">
+      <!-- Status Bar -->
+      <div style="background: #1a1a1a; color: white; padding: 8px 16px; display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
+        <span>9:41</span>
+        <div style="display: flex; gap: 4px; align-items: center;">
+          <span>📶</span><span>📡</span><span>🔋</span>
+        </div>
+      </div>
+      <!-- Header -->
+      <div style="background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%); padding: 28px 20px; color: white; text-align: center;">
+        <div style="font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 700; margin-bottom: 4px;">Add Property</div>
+        <div style="font-size: 12px; opacity: 0.9;">Step 1 of 2: Property Details</div>
+      </div>
+      <!-- Content -->
+      <div style="padding: 24px;">
+        <!-- Property Type -->
+        <div style="margin-bottom: 24px;">
+          <div style="font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 700; color: #1a1a1a; margin-bottom: 12px;">What type of property?</div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <button style="padding: 18px; border: 2.5px solid #2563eb; background: #eff6ff; border-radius: 12px; color: #2563eb; font-weight: 700; cursor: pointer; transition: all 0.3s; font-size: 14px;">
+              🏘️<br>Rental
+            </button>
+            <button style="padding: 18px; border: 2.5px solid #e5e7eb; background: white; border-radius: 12px; color: #6b7280; font-weight: 700; cursor: pointer; transition: all 0.3s; font-size: 14px;">
+              🏢<br>PG/Hostel
+            </button>
+          </div>
+        </div>
+        <!-- Form Fields -->
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; font-size: 12px; font-weight: 600; color: #1a1a1a; margin-bottom: 8px;">Property Name *</label>
+          <input type="text" placeholder="e.g., Vihar Nagar 2-BHK" style="width: 100%; padding: 12px 14px; border: 1.5px solid #e5e7eb; border-radius: 10px; font-family: 'Inter', sans-serif; font-size: 14px; transition: all 0.2s;" />
+        </div>
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; font-size: 12px; font-weight: 600; color: #1a1a1a; margin-bottom: 8px;">Property Total Rent (₹) *</label>
+          <input type="number" placeholder="25,000" style="width: 100%; padding: 12px 14px; border: 1.5px solid #e5e7eb; border-radius: 10px; font-family: 'Inter', sans-serif; font-size: 14px; transition: all 0.2s;" />
+        </div>
+        <div style="margin-bottom: 28px;">
+          <label style="display: block; font-size: 12px; font-weight: 600; color: #1a1a1a; margin-bottom: 8px;">Address *</label>
+          <input type="text" placeholder="Street address" style="width: 100%; padding: 12px 14px; border: 1.5px solid #e5e7eb; border-radius: 10px; font-family: 'Inter', sans-serif; font-size: 14px; transition: all 0.2s; margin-bottom: 10px;" />
+        </div>
+        <button style="width: 100%; padding: 16px; background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%); color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 15px; cursor: pointer; transition: all 0.3s;">Continue →</button>
+      </div>
+      <!-- Footer -->
+      <div style="background: #f9f9f9; border-top: 1px solid #f0f0f0; padding: 12px; text-align: center;">
+        <div style="width: 32px; height: 4px; background: #1a1a1a; border-radius: 2px; margin: 0 auto;"></div>
+      </div>
+    </div>
+
+    <div style="padding: 20px;">
+      <h2 style="font-family: 'Poppins', sans-serif; font-size: 18px; font-weight: 700; margin: 0 0 16px; color: #1a1a1a;">Add Property Flow</h2>
+      <ul style="margin: 0; padding: 0; list-style: none; font-size: 14px; line-height: 1.8; color: #4b5563;">
+        <li style="margin-bottom: 12px;"><strong>Clear type selection</strong> — Users pick Rental or PG upfront to set context</li>
+        <li style="margin-bottom: 12px;"><strong>Step indicator</strong> — "Step 1 of 2" shows progress and what's coming</li>
+        <li style="margin-bottom: 12px;"><strong>Gradient headers</strong> — Each screen has a unique purple-to-pink gradient</li>
+        <li style="margin-bottom: 12px;"><strong>Required field labels</strong> — Asterisks show what must be filled</li>
+        <li style="margin-bottom: 12px;"><strong>Forward momentum</strong> — "Continue →" button guides to next step</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SCREEN 3: Tenant Onboarding -->
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 48px;">
+    <div style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.1); height: fit-content;">
+      <div style="background: #1a1a1a; color: white; padding: 8px 16px; display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
+        <span>9:41</span>
+        <div style="display: flex; gap: 4px; align-items: center;">
+          <span>📶</span><span>📡</span><span>🔋</span>
+        </div>
+      </div>
+      <div style="background: linear-gradient(135deg, #f97316 0%, #ec4899 100%); padding: 28px 20px; color: white; text-align: center;">
+        <div style="font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 700; margin-bottom: 4px;">Add Tenant</div>
+      </div>
+      <div style="padding: 24px;">
+        <!-- Tenant Rent -->
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; font-size: 12px; font-weight: 600; color: #1a1a1a; margin-bottom: 8px;">Tenant Name *</label>
+          <input type="text" placeholder="Raj Kumar" style="width: 100%; padding: 12px 14px; border: 1.5px solid #e5e7eb; border-radius: 10px; font-family: 'Inter', sans-serif; font-size: 14px;" />
+        </div>
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; font-size: 12px; font-weight: 600; color: #1a1a1a; margin-bottom: 8px;">Room No. / Floor *</label>
+          <input type="text" placeholder="e.g., 1F-102" style="width: 100%; padding: 12px 14px; border: 1.5px solid #e5e7eb; border-radius: 10px; font-family: 'Inter', sans-serif; font-size: 14px;" />
+        </div>
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; font-size: 12px; font-weight: 600; color: #1a1a1a; margin-bottom: 8px;">Monthly Rent (₹) *</label>
+          <input type="number" placeholder="25,000" style="width: 100%; padding: 12px 14px; border: 1.5px solid #e5e7eb; border-radius: 10px; font-family: 'Inter', sans-serif; font-size: 14px;" />
+        </div>
+        <div style="margin-bottom: 28px;">
+          <label style="display: block; font-size: 12px; font-weight: 600; color: #1a1a1a; margin-bottom: 8px;">Phone (Optional)</label>
+          <input type="tel" placeholder="+91 98765 43210" style="width: 100%; padding: 12px 14px; border: 1.5px solid #e5e7eb; border-radius: 10px; font-family: 'Inter', sans-serif; font-size: 14px;" />
+        </div>
+        <button style="width: 100%; padding: 16px; background: linear-gradient(135deg, #f97316 0%, #ec4899 100%); color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 15px; cursor: pointer; transition: all 0.3s;">Save Tenant</button>
+      </div>
+      <div style="background: #f9f9f9; border-top: 1px solid #f0f0f0; padding: 12px; text-align: center;">
+        <div style="width: 32px; height: 4px; background: #1a1a1a; border-radius: 2px; margin: 0 auto;"></div>
+      </div>
+    </div>
+
+    <div style="padding: 20px;">
+      <h2 style="font-family: 'Poppins', sans-serif; font-size: 18px; font-weight: 700; margin: 0 0 16px; color: #1a1a1a;">Tenant Onboarding</h2>
+      <ul style="margin: 0; padding: 0; list-style: none; font-size: 14px; line-height: 1.8; color: #4b5563;">
+        <li style="margin-bottom: 12px;"><strong>Step progress indicator</strong> — Visual checkmarks show completed steps</li>
+        <li style="margin-bottom: 12px;"><strong>Optional fields</strong> — Phone number is optional to reduce friction</li>
+        <li style="margin-bottom: 12px;"><strong>Manual payment tracking</strong> — Owner marks payments manually after collection</li>
+        <li style="margin-bottom: 12px;"><strong>Multi-step flow</strong> — Breaks down onboarding into digestible steps</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SCREEN 4: Payment History & Reminders -->
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 48px;">
+    <div style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.1); height: fit-content;">
+      <div style="background: #1a1a1a; color: white; padding: 8px 16px; display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
+        <span>9:41</span>
+        <div style="display: flex; gap: 4px; align-items: center;">
+          <span>📶</span><span>📡</span><span>🔋</span>
+        </div>
+      </div>
+      <div style="background: linear-gradient(135deg, #059669 0%, #10b981 100%); padding: 20px; color: white;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <div style="font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: 700;">Payments</div>
+          <button style="padding: 6px 12px; background: rgba(255,255,255,0.2); border: none; border-radius: 8px; color: white; font-size: 11px; font-weight: 600; cursor: pointer;">Filter</button>
+        </div>
+        <div style="font-size: 12px; opacity: 0.9;">Mumbai 2-BHK</div>
+      </div>
+      <div style="padding: 20px;">
+        <!-- Month Tabs -->
+        <div style="display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 4px;">
+          <button style="padding: 8px 14px; background: #e0f2fe; color: #0369a1; border: none; border-radius: 8px; font-weight: 600; font-size: 12px; cursor: pointer; white-space: nowrap;">Sept</button>
+          <button style="padding: 8px 14px; background: white; color: #6b7280; border: 1px solid #e5e7eb; border-radius: 8px; font-weight: 600; font-size: 12px; cursor: pointer; white-space: nowrap;">Aug</button>
+          <button style="padding: 8px 14px; background: white; color: #6b7280; border: 1px solid #e5e7eb; border-radius: 8px; font-weight: 600; font-size: 12px; cursor: pointer; white-space: nowrap;">Jul</button>
+        </div>
+        <!-- Transaction 1: Paid -->
+        <div style="background: #f0fdf4; border: 1px solid #dcfce7; border-radius: 12px; padding: 14px; margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+            <div style="display: flex; gap: 10px; flex: 1;">
+              <div style="width: 36px; height: 36px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700;">✓</div>
+              <div>
+                <div style="font-weight: 700; color: #1a1a1a; font-size: 14px;">Raj Kumar</div>
+                <div style="font-size: 11px; color: #6b7280;">Sept 5, 2026 • 2:14 PM</div>
+              </div>
+            </div>
+            <div style="text-align: right;">
+              <div style="font-weight: 700; color: #059669; font-size: 14px;">+₹25,000</div>
+              <div style="font-size: 10px; color: #059669; font-weight: 600; margin-top: 2px;">Received</div>
+            </div>
+          </div>
+        </div>
+        <!-- Transaction 2: Pending -->
+        <div style="background: #fffbeb; border: 1px solid #fde68a; border-radius: 12px; padding: 14px; margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+            <div style="display: flex; gap: 10px; flex: 1;">
+              <div style="width: 36px; height: 36px; background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700;">⏱</div>
+              <div>
+                <div style="font-weight: 700; color: #1a1a1a; font-size: 14px;">Priya Singh</div>
+                <div style="font-size: 11px; color: #6b7280;">Due Sept 1 • 8 days pending</div>
+              </div>
+            </div>
+            <div style="text-align: right;">
+              <div style="font-weight: 700; color: #f59e0b; font-size: 14px;">₹25,000</div>
+              <button style="font-size: 10px; color: #f59e0b; font-weight: 600; margin-top: 2px; background: none; border: 1px solid #fcd34d; padding: 3px 8px; border-radius: 4px; cursor: pointer;">Remind</button>
+            </div>
+          </div>
+        </div>
+        <!-- Transaction 3: Overdue -->
+        <div style="background: #fee2e2; border: 1px solid #fecaca; border-radius: 12px; padding: 14px;">
+          <div style="display: flex; justify-content: space-between; align-items: start;">
+            <div style="display: flex; gap: 10px; flex: 1;">
+              <div style="width: 36px; height: 36px; background: linear-gradient(135deg, #f87171 0%, #dc2626 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700;">✕</div>
+              <div>
+                <div style="font-weight: 700; color: #1a1a1a; font-size: 14px;">Amit Patel</div>
+                <div style="font-size: 11px; color: #6b7280;">Due Aug 1 • 50 days overdue</div>
+              </div>
+            </div>
+            <div style="text-align: right;">
+              <div style="font-weight: 700; color: #dc2626; font-size: 14px;">₹25,000</div>
+              <button style="font-size: 10px; color: white; font-weight: 600; margin-top: 2px; background: #dc2626; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer;">Mark Paid</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="background: #f9f9f9; border-top: 1px solid #f0f0f0; padding: 12px; text-align: center;">
+        <div style="width: 32px; height: 4px; background: #1a1a1a; border-radius: 2px; margin: 0 auto;"></div>
+      </div>
+    </div>
+
+    <div style="padding: 20px;">
+      <h2 style="font-family: 'Poppins', sans-serif; font-size: 18px; font-weight: 700; margin: 0 0 16px; color: #1a1a1a;">Payment History & Actions</h2>
+      <ul style="margin: 0; padding: 0; list-style: none; font-size: 14px; line-height: 1.8; color: #4b5563;">
+        <li style="margin-bottom: 12px;"><strong>Color-coded transactions</strong> — Green (paid), yellow (pending), red (overdue) at a glance</li>
+        <li style="margin-bottom: 12px;"><strong>Status indicators</strong> — Icons (✓, ⏱, ✕) + days overdue for clarity</li>
+        <li style="margin-bottom: 12px;"><strong>Action buttons</strong> — "Remind" pending, "Mark Paid" overdue directly from list</li>
+        <li style="margin-bottom: 12px;"><strong>Time stamps</strong> — Shows when payment was received or when it's due</li>
+        <li style="margin-bottom: 12px;"><strong>Month filter</strong> — Switch between months to see historical payments</li>
+        <li style="margin-bottom: 12px;"><strong>Gradient icons</strong> — Each status has a unique gradient background</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SCREEN 5: Sign-up/Login -->
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 48px;">
+    <div style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.1); height: fit-content;">
+      <div style="background: #1a1a1a; color: white; padding: 8px 16px; display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
+        <span>9:41</span>
+        <div style="display: flex; gap: 4px; align-items: center;">
+          <span>📶</span><span>📡</span><span>🔋</span>
+        </div>
+      </div>
+      <div style="background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%); padding: 40px 24px; color: white; text-align: center;">
+        <div style="font-family: 'Poppins', sans-serif; font-size: 32px; font-weight: 800; margin-bottom: 8px;">RentMitra</div>
+        <div style="font-size: 13px; opacity: 0.9;">Manage properties, track rent, get paid</div>
+      </div>
+      <div style="padding: 32px 24px;">
+        <div style="font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: 700; color: #1a1a1a; margin-bottom: 6px;">Login or Sign up</div>
+        <div style="font-size: 13px; color: #6b7280; margin-bottom: 24px;">Enter your mobile number. We'll send a 6-digit OTP.</div>
+        <label style="display: block; font-size: 12px; font-weight: 600; color: #1a1a1a; margin-bottom: 8px;">Mobile Number</label>
+        <div style="display: flex; gap: 8px; margin-bottom: 24px;">
+          <div style="padding: 14px; border: 1.5px solid #e5e7eb; border-radius: 10px; font-size: 14px; font-weight: 600; color: #1a1a1a; background: #f9fafb;">🇮🇳 +91</div>
+          <input type="tel" placeholder="98765 43210" style="flex: 1; min-width: 0; padding: 14px; border: 1.5px solid #2563eb; border-radius: 10px; font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600; letter-spacing: 0.5px;" />
+        </div>
+        <button style="width: 100%; padding: 16px; background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%); color: white; border: none; border-radius: 12px; font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 15px; cursor: pointer; margin-bottom: 16px;">Get OTP</button>
+        <div style="font-size: 11px; color: #9ca3af; text-align: center; line-height: 1.6;">New number? Your account is created automatically.<br>By continuing you agree to our <a href="#" style="color: #2563eb; font-weight: 600;">Terms</a> &amp; <a href="#" style="color: #2563eb; font-weight: 600;">Privacy Policy</a></div>
+      </div>
+      <div style="background: #f9f9f9; border-top: 1px solid #f0f0f0; padding: 12px; text-align: center;">
+        <div style="width: 32px; height: 4px; background: #1a1a1a; border-radius: 2px; margin: 0 auto;"></div>
+      </div>
+    </div>
+
+    <div style="padding: 20px;">
+      <h2 style="font-family: 'Poppins', sans-serif; font-size: 18px; font-weight: 700; margin: 0 0 16px; color: #1a1a1a;">Login / Sign up (OTP only)</h2>
+      <ul style="margin: 0; padding: 0; list-style: none; font-size: 14px; line-height: 1.8; color: #4b5563;">
+        <li style="margin-bottom: 12px;"><strong>Mobile number only</strong> — One field, no password, no email</li>
+        <li style="margin-bottom: 12px;"><strong>Same flow for new and returning users</strong> — New numbers get an account automatically</li>
+        <li style="margin-bottom: 12px;"><strong>+91 prefix fixed</strong> — Indian numbers only, 10-digit input</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SCREEN 5B: OTP Verify -->
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 48px;">
+    <div style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.1); height: fit-content;">
+      <div style="background: #1a1a1a; color: white; padding: 8px 16px; display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
+        <span>9:41</span>
+        <div style="display: flex; gap: 4px; align-items: center;">
+          <span>📶</span><span>📡</span><span>🔋</span>
+        </div>
+      </div>
+      <div style="padding: 20px 24px 32px;">
+        <div style="width: 36px; height: 36px; border-radius: 50%; background: #f3f4f6; display: flex; align-items: center; justify-content: center; font-size: 16px; margin-bottom: 28px;">←</div>
+        <div style="width: 64px; height: 64px; border-radius: 20px; background: linear-gradient(135deg, #dbeafe 0%, #ede9fe 100%); display: flex; align-items: center; justify-content: center; font-size: 28px; margin-bottom: 20px;">💬</div>
+        <div style="font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 700; color: #1a1a1a; margin-bottom: 6px;">Verify your number</div>
+        <div style="font-size: 13px; color: #6b7280; margin-bottom: 28px; line-height: 1.5;">Enter the 6-digit code sent to <strong style="color: #1a1a1a;">+91 98765 43210</strong> <a href="#" style="color: #2563eb; font-weight: 600;">Edit</a></div>
+        <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-bottom: 20px;">
+          <div style="height: 52px; border: 1.5px solid #2563eb; border-radius: 12px; background: #eff6ff; display: flex; align-items: center; justify-content: center; font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 700; color: #1a1a1a;">4</div>
+          <div style="height: 52px; border: 1.5px solid #2563eb; border-radius: 12px; background: #eff6ff; display: flex; align-items: center; justify-content: center; font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 700; color: #1a1a1a;">8</div>
+          <div style="height: 52px; border: 1.5px solid #2563eb; border-radius: 12px; background: #eff6ff; display: flex; align-items: center; justify-content: center; font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 700; color: #1a1a1a;">2</div>
+          <div style="height: 52px; border: 2px solid #7c3aed; border-radius: 12px; background: white; display: flex; align-items: center; justify-content: center;"><div style="width: 2px; height: 22px; background: #7c3aed;"></div></div>
+          <div style="height: 52px; border: 1.5px solid #e5e7eb; border-radius: 12px; background: white;"></div>
+          <div style="height: 52px; border: 1.5px solid #e5e7eb; border-radius: 12px; background: white;"></div>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 28px;">
+          <span style="color: #6b7280;">Didn't get it?</span>
+          <span style="color: #9ca3af; font-weight: 600;">Resend in 0:24</span>
+        </div>
+        <button style="width: 100%; padding: 16px; background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%); color: white; border: none; border-radius: 12px; font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 15px; cursor: pointer; opacity: 0.5;">Verify &amp; Continue</button>
+      </div>
+      <div style="background: #f9f9f9; border-top: 1px solid #f0f0f0; padding: 12px; text-align: center;">
+        <div style="width: 32px; height: 4px; background: #1a1a1a; border-radius: 2px; margin: 0 auto;"></div>
+      </div>
+    </div>
+
+    <div style="padding: 20px;">
+      <h2 style="font-family: 'Poppins', sans-serif; font-size: 18px; font-weight: 700; margin: 0 0 16px; color: #1a1a1a;">OTP Verify</h2>
+      <ul style="margin: 0; padding: 0; list-style: none; font-size: 14px; line-height: 1.8; color: #4b5563;">
+        <li style="margin-bottom: 12px;"><strong>6 separate boxes</strong> — Auto-advances; supports SMS autofill on Android and iOS</li>
+        <li style="margin-bottom: 12px;"><strong>Number shown with Edit</strong> — Fix a typo without starting over</li>
+        <li style="margin-bottom: 12px;"><strong>Resend timer</strong> — 30-second countdown before a new OTP can be requested</li>
+        <li style="margin-bottom: 12px;"><strong>Button stays disabled</strong> — Until all 6 digits are entered</li>
+        <li style="margin-bottom: 12px;"><strong>After verify</strong> — New users go to Add Property; returning users go to Dashboard</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SCREEN 10: Property Detail -->
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 48px;">
+    <div style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.1); height: fit-content;">
+      <div style="background: #1a1a1a; color: white; padding: 8px 16px; display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
+        <span>9:41</span>
+        <div style="display: flex; gap: 4px; align-items: center;">
+          <span>📶</span><span>📡</span><span>🔋</span>
+        </div>
+      </div>
+      <div style="background: linear-gradient(135deg, #f97316 0%, #ec4899 100%); padding: 16px 20px 22px; color: white;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <div style="width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 15px;">←</div>
+          <div style="display: flex; gap: 8px;">
+            <div style="padding: 7px 12px; border-radius: 8px; background: rgba(255,255,255,0.2); font-size: 11px; font-weight: 700;">✎ Edit</div>
+            <div style="padding: 7px 12px; border-radius: 8px; background: rgba(255,255,255,0.2); font-size: 11px; font-weight: 700;">🗑 Delete</div>
+          </div>
+        </div>
+        <div style="display: inline-block; padding: 3px 10px; border-radius: 999px; background: rgba(255,255,255,0.25); font-size: 10px; font-weight: 700; margin-bottom: 8px;">PG</div>
+        <div style="font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 700;">Sunrise PG</div>
+        <div style="font-size: 12px; opacity: 0.9; margin-top: 2px;">📍 14th Cross, Koramangala 5th Block</div>
+      </div>
+      <div style="padding: 20px; display: flex; flex-direction: column; gap: 14px;">
+        <div style="background: white; border: 1px solid #f0f0f0; border-radius: 14px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+          <div style="font-size: 11px; color: #6b7280; font-weight: 600; margin-bottom: 4px;">SEPTEMBER RENT</div>
+          <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 10px;">
+            <div style="font-family: 'Poppins', sans-serif; font-size: 26px; font-weight: 800; color: #059669;">₹16,000</div>
+            <div style="font-size: 12px; color: #6b7280;">of ₹32,000</div>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+            <div style="background: #f0fdf4; border-radius: 10px; padding: 10px;"><div style="font-size: 10px; color: #15803d; font-weight: 600;">Collected</div><div style="font-weight: 700; color: #15803d; font-size: 14px;">₹16,000</div></div>
+            <div style="background: #fef2f2; border-radius: 10px; padding: 10px;"><div style="font-size: 10px; color: #b91c1c; font-weight: 600;">Due</div><div style="font-weight: 700; color: #b91c1c; font-size: 14px;">₹16,000</div></div>
+          </div>
+        </div>
+        <div style="background: white; border: 1px solid #f0f0f0; border-radius: 14px; padding: 16px;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+            <div style="font-size: 12px; font-weight: 700; color: #1a1a1a;">Occupancy</div>
+            <div style="font-size: 12px; font-weight: 700; color: #f97316;">4 of 5 rooms · 80%</div>
+          </div>
+          <div style="height: 8px; background: #ffedd5; border-radius: 4px; overflow: hidden;"><div style="width: 80%; height: 100%; background: linear-gradient(90deg, #f97316, #ec4899);"></div></div>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+          <div style="font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 700; color: #1a1a1a;">Tenants (4)</div>
+          <div style="font-size: 12px; color: #2563eb; font-weight: 700;">+ Add Tenant</div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid #f0f0f0; border-radius: 12px;">
+            <div style="width: 36px; height: 36px; border-radius: 50%; background: #dcfce7; color: #15803d; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center;">RK</div>
+            <div style="flex: 1;"><div style="font-size: 13px; font-weight: 700; color: #1a1a1a;">Raj Kumar</div><div style="font-size: 11px; color: #6b7280;">Room 101 · Floor 1</div></div>
+            <div style="text-align: right;"><div style="font-size: 13px; font-weight: 700; color: #1a1a1a;">₹8,000</div><div style="font-size: 10px; font-weight: 700; color: #15803d;">Paid</div></div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid #f0f0f0; border-radius: 12px;">
+            <div style="width: 36px; height: 36px; border-radius: 50%; background: #fee2e2; color: #b91c1c; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center;">PS</div>
+            <div style="flex: 1;"><div style="font-size: 13px; font-weight: 700; color: #1a1a1a;">Priya Sharma</div><div style="font-size: 11px; color: #6b7280;">Room 204 · Floor 2</div></div>
+            <div style="text-align: right;"><div style="font-size: 13px; font-weight: 700; color: #1a1a1a;">₹8,500</div><div style="font-size: 10px; font-weight: 700; color: #b91c1c;">Overdue 12d</div></div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid #f0f0f0; border-radius: 12px;">
+            <div style="width: 36px; height: 36px; border-radius: 50%; background: #fef3c7; color: #b45309; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center;">AP</div>
+            <div style="flex: 1;"><div style="font-size: 13px; font-weight: 700; color: #1a1a1a;">Amit Patel</div><div style="font-size: 11px; color: #6b7280;">Room 108 · Floor 1</div></div>
+            <div style="text-align: right;"><div style="font-size: 13px; font-weight: 700; color: #1a1a1a;">₹7,500</div><div style="font-size: 10px; font-weight: 700; color: #b45309;">Pending</div></div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid #f0f0f0; border-radius: 12px;">
+            <div style="width: 36px; height: 36px; border-radius: 50%; background: #dcfce7; color: #15803d; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center;">SN</div>
+            <div style="flex: 1;"><div style="font-size: 13px; font-weight: 700; color: #1a1a1a;">Sneha Nair</div><div style="font-size: 11px; color: #6b7280;">Room 302 · Floor 3</div></div>
+            <div style="text-align: right;"><div style="font-size: 13px; font-weight: 700; color: #1a1a1a;">₹8,000</div><div style="font-size: 10px; font-weight: 700; color: #15803d;">Paid</div></div>
+          </div>
+        </div>
+      </div>
+      <div style="background: #f9f9f9; border-top: 1px solid #f0f0f0; padding: 12px; text-align: center;">
+        <div style="width: 32px; height: 4px; background: #1a1a1a; border-radius: 2px; margin: 0 auto;"></div>
+      </div>
+    </div>
+
+    <div style="padding: 20px;">
+      <h2 style="font-family: 'Poppins', sans-serif; font-size: 18px; font-weight: 700; margin: 0 0 16px; color: #1a1a1a;">Property Detail</h2>
+      <ul style="margin: 0; padding: 0; list-style: none; font-size: 14px; line-height: 1.8; color: #4b5563;">
+        <li style="margin-bottom: 12px;"><strong>Opens from any property card</strong> — Header shows type badge, name and address</li>
+        <li style="margin-bottom: 12px;"><strong>Edit / Delete</strong> — Top-right; delete asks for confirmation and warns if tenants are active</li>
+        <li style="margin-bottom: 12px;"><strong>Rent summary</strong> — Collected vs due for the current month</li>
+        <li style="margin-bottom: 12px;"><strong>Occupancy bar</strong> — Rooms (PG) or units (Rental) filled</li>
+        <li style="margin-bottom: 12px;"><strong>Tenant list</strong> — Status per tenant; tap opens tenant payment screen</li>
+        <li style="margin-bottom: 12px;"><strong>+ Add Tenant</strong> — Opens Add Tenant with this property pre-selected</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SCREEN 11: Profile & Settings -->
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 48px;">
+    <div style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.1); height: fit-content;">
+      <div style="background: #1a1a1a; color: white; padding: 8px 16px; display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
+        <span>9:41</span>
+        <div style="display: flex; gap: 4px; align-items: center;">
+          <span>📶</span><span>📡</span><span>🔋</span>
+        </div>
+      </div>
+      <div style="background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%); padding: 20px 20px 24px; color: white; display: flex; align-items: center; gap: 14px;">
+        <div style="width: 56px; height: 56px; border-radius: 50%; background: white; color: #4f46e5; font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 20px; display: flex; align-items: center; justify-content: center;">RS</div>
+        <div style="flex: 1;">
+          <div style="font-family: 'Poppins', sans-serif; font-size: 18px; font-weight: 700;">Rakesh Sharma</div>
+          <div style="font-size: 12px; opacity: 0.9;">+91 98765 43210</div>
+        </div>
+        <div style="padding: 7px 12px; border-radius: 8px; background: rgba(255,255,255,0.2); font-size: 11px; font-weight: 700;">✎ Edit</div>
+      </div>
+      <div style="padding: 20px; background: #f9fafb; display: flex; flex-direction: column; gap: 18px;">
+        <div style="background: white; border: 1px solid #e0e7ff; border-radius: 14px; padding: 14px; display: flex; align-items: center; gap: 10px;">
+          <div style="flex: 1;"><div style="font-size: 11px; color: #6b7280; font-weight: 600;">Your UPI ID (shared with tenants)</div><div style="font-size: 14px; font-weight: 700; color: #1a1a1a;">rakesh.sharma@okicici</div></div>
+          <div style="padding: 8px 12px; border-radius: 8px; background: #eef2ff; color: #4f46e5; font-size: 11px; font-weight: 700;">Copy</div>
+        </div>
+        <div>
+          <div style="font-size: 11px; font-weight: 700; color: #9ca3af; letter-spacing: 0.5px; margin: 0 0 8px 4px;">REMINDERS</div>
+          <div style="background: white; border: 1px solid #f0f0f0; border-radius: 14px; overflow: hidden;">
+          <div style="display: flex; align-items: center; gap: 12px; padding: 13px 14px; border-bottom: 1px solid #f3f4f6;">
+            <div style="width: 32px; height: 32px; border-radius: 10px; background: #f3f4f6; display: flex; align-items: center; justify-content: center; font-size: 15px;">⏰</div>
+            <div style="flex: 1; font-size: 13px; font-weight: 600; color: #1a1a1a;">Reminder timing</div>
+            <div style="font-size: 12px; color: #6b7280;">3 days before</div>
+            <div style="color: #d1d5db; font-size: 14px;">›</div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px; padding: 13px 14px; border-bottom: 1px solid #f3f4f6;">
+            <div style="width: 32px; height: 32px; border-radius: 10px; background: #f3f4f6; display: flex; align-items: center; justify-content: center; font-size: 15px;">💬</div>
+            <div style="flex: 1; font-size: 13px; font-weight: 600; color: #1a1a1a;">WhatsApp message template</div>
+            
+            <div style="color: #d1d5db; font-size: 14px;">›</div>
+          </div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size: 11px; font-weight: 700; color: #9ca3af; letter-spacing: 0.5px; margin: 0 0 8px 4px;">APP</div>
+          <div style="background: white; border: 1px solid #f0f0f0; border-radius: 14px; overflow: hidden;">
+          <div style="display: flex; align-items: center; gap: 12px; padding: 13px 14px; border-bottom: 1px solid #f3f4f6;">
+            <div style="width: 32px; height: 32px; border-radius: 10px; background: #f3f4f6; display: flex; align-items: center; justify-content: center; font-size: 15px;">🌐</div>
+            <div style="flex: 1; font-size: 13px; font-weight: 600; color: #1a1a1a;">Language</div>
+            <div style="font-size: 12px; color: #6b7280;">English</div>
+            <div style="color: #d1d5db; font-size: 14px;">›</div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px; padding: 13px 14px; border-bottom: 1px solid #f3f4f6;">
+            <div style="width: 32px; height: 32px; border-radius: 10px; background: #f3f4f6; display: flex; align-items: center; justify-content: center; font-size: 15px;">📤</div>
+            <div style="flex: 1; font-size: 13px; font-weight: 600; color: #1a1a1a;">Export all data</div>
+            <div style="font-size: 12px; color: #6b7280;">CSV / PDF</div>
+            <div style="color: #d1d5db; font-size: 14px;">›</div>
+          </div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size: 11px; font-weight: 700; color: #9ca3af; letter-spacing: 0.5px; margin: 0 0 8px 4px;">SUPPORT</div>
+          <div style="background: white; border: 1px solid #f0f0f0; border-radius: 14px; overflow: hidden;">
+          <div style="display: flex; align-items: center; gap: 12px; padding: 13px 14px; border-bottom: 1px solid #f3f4f6;">
+            <div style="width: 32px; height: 32px; border-radius: 10px; background: #f3f4f6; display: flex; align-items: center; justify-content: center; font-size: 15px;">❓</div>
+            <div style="flex: 1; font-size: 13px; font-weight: 600; color: #1a1a1a;">Help & support</div>
+            
+            <div style="color: #d1d5db; font-size: 14px;">›</div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px; padding: 13px 14px; border-bottom: 1px solid #f3f4f6;">
+            <div style="width: 32px; height: 32px; border-radius: 10px; background: #f3f4f6; display: flex; align-items: center; justify-content: center; font-size: 15px;">🔒</div>
+            <div style="flex: 1; font-size: 13px; font-weight: 600; color: #1a1a1a;">Privacy policy</div>
+            
+            <div style="color: #d1d5db; font-size: 14px;">›</div>
+          </div>
+          </div>
+        </div>
+        <div style="background: white; border: 1px solid #f0f0f0; border-radius: 14px; overflow: hidden;">
+          <div style="display: flex; align-items: center; gap: 12px; padding: 13px 14px; border-bottom: 1px solid #f3f4f6;">
+            <div style="width: 32px; height: 32px; border-radius: 10px; background: #f3f4f6; display: flex; align-items: center; justify-content: center; font-size: 15px;">↪</div>
+            <div style="flex: 1; font-size: 13px; font-weight: 600; color: #1a1a1a;">Logout</div>
+            
+            <div style="color: #d1d5db; font-size: 14px;">›</div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px; padding: 13px 14px; border-bottom: 1px solid #f3f4f6;">
+            <div style="width: 32px; height: 32px; border-radius: 10px; background: #f3f4f6; display: flex; align-items: center; justify-content: center; font-size: 15px;">⚠</div>
+            <div style="flex: 1; font-size: 13px; font-weight: 600; color: #dc2626;">Delete account</div>
+            
+            <div style="color: #d1d5db; font-size: 14px;">›</div>
+          </div>
+        </div>
+        <div style="text-align: center; font-size: 11px; color: #9ca3af;">RentMitra v1.0.0</div>
+      </div>
+      <div style="background: #f9f9f9; border-top: 1px solid #f0f0f0; padding: 12px; text-align: center;">
+        <div style="width: 32px; height: 4px; background: #1a1a1a; border-radius: 2px; margin: 0 auto;"></div>
+      </div>
+    </div>
+
+    <div style="padding: 20px;">
+      <h2 style="font-family: 'Poppins', sans-serif; font-size: 18px; font-weight: 700; margin: 0 0 16px; color: #1a1a1a;">Profile & Settings</h2>
+      <ul style="margin: 0; padding: 0; list-style: none; font-size: 14px; line-height: 1.8; color: #4b5563;">
+        <li style="margin-bottom: 12px;"><strong>Opens from the 👤 icon</strong> — On the dashboard header</li>
+        <li style="margin-bottom: 12px;"><strong>Edit profile</strong> — Name and photo; mobile changes need a fresh OTP</li>
+        <li style="margin-bottom: 12px;"><strong>Owner UPI ID</strong> — One-tap copy; included in WhatsApp reminders</li>
+        <li style="margin-bottom: 12px;"><strong>Reminder timing</strong> — Choose 1, 3, 5 or 7 days before the due date</li>
+        <li style="margin-bottom: 12px;"><strong>WhatsApp template</strong> — Editable message with {name}, {amount}, {due date}, {UPI} fields</li>
+        <li style="margin-bottom: 12px;"><strong>Language</strong> — English / हिन्दी</li>
+        <li style="margin-bottom: 12px;"><strong>Export all data</strong> — Properties, tenants and payment history as CSV or PDF</li>
+        <li style="margin-bottom: 12px;"><strong>Logout / Delete account</strong> — Both confirm first; delete is red and needs OTP</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SCREEN 6: Income Reports -->
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 48px;">
+    <div style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.1); height: fit-content;">
+      <div style="background: #1a1a1a; color: white; padding: 8px 16px; display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
+        <span>9:41</span>
+        <div style="display: flex; gap: 4px; align-items: center;">
+          <span>📶</span><span>📡</span><span>🔋</span>
+        </div>
+      </div>
+      <div style="background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%); padding: 20px; color: white;">
+        <div style="font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: 700;">Monthly Income</div>
+        <div style="font-size: 12px; opacity: 0.9; margin-top: 4px;">September 2026</div>
+      </div>
+      <div style="padding: 24px;">
+        <!-- Income Card -->
+        <div style="background: linear-gradient(135deg, #f3f0ff 0%, #ede9fe 100%); border: 1px solid #e9d5ff; border-radius: 14px; padding: 20px; margin-bottom: 24px; text-align: center;">
+          <div style="font-size: 12px; color: #7c3aed; font-weight: 600; margin-bottom: 8px;">TOTAL INCOME</div>
+          <div style="font-family: 'Poppins', sans-serif; font-size: 36px; font-weight: 800; color: #7c3aed; margin-bottom: 12px;">₹75,000</div>
+          <div style="font-size: 12px; color: #a78bfa;">From 2 properties • 2 tenants</div>
+        </div>
+        <!-- Breakdown -->
+        <div style="margin-bottom: 24px;">
+          <div style="font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 700; color: #1a1a1a; margin-bottom: 12px;">Property Breakdown</div>
+          <!-- Property 1 -->
+          <div style="background: #f0f9ff; border-left: 4px solid #2563eb; border-radius: 8px; padding: 12px; margin-bottom: 10px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <div style="font-weight: 600; color: #1a1a1a; font-size: 13px;">Mumbai 2-BHK</div>
+              <div style="font-weight: 700; color: #2563eb; font-size: 13px;">₹50,000</div>
+            </div>
+            <div style="height: 6px; background: #dbeafe; border-radius: 3px; overflow: hidden;">
+              <div style="height: 100%; background: linear-gradient(90deg, #2563eb 0%, #7c3aed 100%); width: 100%;"></div>
+            </div>
+            <div style="font-size: 10px; color: #6b7280; margin-top: 6px;">2/2 tenants paid</div>
+          </div>
+          <!-- Property 2 -->
+          <div style="background: #fffbeb; border-left: 4px solid #f59e0b; border-radius: 8px; padding: 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <div style="font-weight: 600; color: #1a1a1a; font-size: 13px;">Delhi PG</div>
+              <div style="font-weight: 700; color: #f59e0b; font-size: 13px;">₹25,000</div>
+            </div>
+            <div style="height: 6px; background: #fde68a; border-radius: 3px; overflow: hidden;">
+              <div style="height: 100%; background: linear-gradient(90deg, #f97316 0%, #ec4899 100%); width: 80%;"></div>
+            </div>
+            <div style="font-size: 10px; color: #6b7280; margin-top: 6px;">4/5 rooms paid</div>
+          </div>
+        </div>
+        <!-- Export Button -->
+        <button style="width: 100%; padding: 14px; background: white; color: #7c3aed; border: 1.5px solid #e9d5ff; border-radius: 10px; font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 14px; cursor: pointer;">📥 Download Report (PDF)</button>
+      </div>
+      <div style="background: #f9f9f9; border-top: 1px solid #f0f0f0; padding: 12px; text-align: center;">
+        <div style="width: 32px; height: 4px; background: #1a1a1a; border-radius: 2px; margin: 0 auto;"></div>
+      </div>
+    </div>
+
+    <div style="padding: 20px;">
+      <h2 style="font-family: 'Poppins', sans-serif; font-size: 18px; font-weight: 700; margin: 0 0 16px; color: #1a1a1a;">Income Reports</h2>
+      <ul style="margin: 0; padding: 0; list-style: none; font-size: 14px; line-height: 1.8; color: #4b5563;">
+        <li style="margin-bottom: 12px;"><strong>Monthly summary card</strong> — Large total with property count and tenant count</li>
+        <li style="margin-bottom: 12px;"><strong>Property-wise breakdown</strong> — Colored progress bars show collection per property</li>
+        <li style="margin-bottom: 12px;"><strong>Visual progress</strong> — Tenant/room payment ratios make status obvious</li>
+        <li style="margin-bottom: 12px;"><strong>PDF export</strong> — Download detailed reports for tax or record-keeping</li>
+        <li style="margin-bottom: 12px;"><strong>Month selector</strong> — Switch between months to see historical income</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SCREEN 7: Notifications & Reminders -->
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 48px;">
+    <div style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.1); height: fit-content;">
+      <div style="background: #1a1a1a; color: white; padding: 8px 16px; display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
+        <span>9:41</span>
+        <div style="display: flex; gap: 4px; align-items: center;">
+          <span>📶</span><span>📡</span><span>🔋</span>
+        </div>
+      </div>
+      <div style="background: linear-gradient(135deg, #f97316 0%, #ec4899 100%); padding: 20px; color: white;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: 700;">Alerts</div>
+            <div style="font-size: 12px; opacity: 0.9; margin-top: 4px;">3 active reminders</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.2); padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 600;">🔔 3</div>
+        </div>
+      </div>
+      <div style="padding: 20px;">
+        <!-- Alert 1: Overdue -->
+        <div style="background: #fee2e2; border: 1px solid #fecaca; border-left: 4px solid #dc2626; border-radius: 10px; padding: 14px; margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+            <div style="font-weight: 700; color: #991b1b; font-size: 13px;">⚠️ Overdue Payment</div>
+            <span style="font-size: 10px; color: #dc2626; font-weight: 600;">50 days</span>
+          </div>
+          <div style="font-size: 12px; color: #7f1d1d; margin-bottom: 10px;">Amit Patel hasn't paid rent for Mumbai 2-BHK since August 1</div>
+          <button style="font-size: 11px; color: #dc2626; font-weight: 700; background: white; border: 1px solid #fecaca; padding: 6px 12px; border-radius: 6px; cursor: pointer;">Follow Up</button>
+        </div>
+        <!-- Alert 2: Due Soon -->
+        <div style="background: #fffbeb; border: 1px solid #fde68a; border-left: 4px solid #f59e0b; border-radius: 10px; padding: 14px; margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+            <div style="font-weight: 700; color: #b45309; font-size: 13px;">⏰ Due in 2 Days</div>
+            <span style="font-size: 10px; color: #f59e0b; font-weight: 600;">Sept 30</span>
+          </div>
+          <div style="font-size: 12px; color: #92400e; margin-bottom: 10px;">Priya Singh's rent for Delhi PG is due on September 30</div>
+          <button style="font-size: 11px; color: #f59e0b; font-weight: 700; background: white; border: 1px solid #fde68a; padding: 6px 12px; border-radius: 6px; cursor: pointer;">Send Reminder</button>
+        </div>
+        <!-- Alert 3: Just Paid -->
+        <div style="background: #f0fdf4; border: 1px solid #dcfce7; border-left: 4px solid #059669; border-radius: 10px; padding: 14px;">
+          <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+            <div style="font-weight: 700; color: #15803d; font-size: 13px;">✓ Payment Received</div>
+            <span style="font-size: 10px; color: #059669; font-weight: 600;">Today</span>
+          </div>
+          <div style="font-size: 12px; color: #166534; margin-bottom: 10px;">Raj Kumar paid ₹25,000 for Mumbai 2-BHK</div>
+          <button style="font-size: 11px; color: #059669; font-weight: 700; background: white; border: 1px solid #dcfce7; padding: 6px 12px; border-radius: 6px; cursor: pointer;">View</button>
+        </div>
+      </div>
+      <div style="background: #f9f9f9; border-top: 1px solid #f0f0f0; padding: 12px; text-align: center;">
+        <div style="width: 32px; height: 4px; background: #1a1a1a; border-radius: 2px; margin: 0 auto;"></div>
+      </div>
+    </div>
+
+    <div style="padding: 20px;">
+      <h2 style="font-family: 'Poppins', sans-serif; font-size: 18px; font-weight: 700; margin: 0 0 16px; color: #1a1a1a;">Notifications & Reminders</h2>
+      <ul style="margin: 0; padding: 0; list-style: none; font-size: 14px; line-height: 1.8; color: #4b5563;">
+        <li style="margin-bottom: 12px;"><strong>Color-coded alerts</strong> — Red (overdue), yellow (due soon), green (received)</li>
+        <li style="margin-bottom: 12px;"><strong>Priority ordering</strong> — Most urgent alerts at the top</li>
+        <li style="margin-bottom: 12px;"><strong>Quick actions</strong> — "Follow Up", "Send Reminder", "View" buttons inline</li>
+        <li style="margin-bottom: 12px;"><strong>Badge counter</strong> — Shows unread notification count at a glance</li>
+        <li style="margin-bottom: 12px;"><strong>Contextual details</strong> — Days overdue, tenant name, property, amount all visible</li>
+        <li style="margin-bottom: 12px;"><strong>Push notification setup</strong> — Integrates with device notifications</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SCREEN 8: Occupancy Summary -->
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 48px;">
+    <div style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.1); height: fit-content;">
+      <div style="background: #1a1a1a; color: white; padding: 8px 16px; display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
+        <span>9:41</span>
+        <div style="display: flex; gap: 4px; align-items: center;">
+          <span>📶</span><span>📡</span><span>🔋</span>
+        </div>
+      </div>
+      <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 20px; color: white;">
+        <div style="font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: 700;">Occupancy</div>
+        <div style="font-size: 12px; opacity: 0.9; margin-top: 4px;">All properties</div>
+      </div>
+      <div style="padding: 24px;">
+        <!-- Overall Occupancy -->
+        <div style="background: linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 100%); border: 1px solid #bbf7d0; border-radius: 12px; padding: 16px; margin-bottom: 24px;">
+          <div style="text-align: center;">
+            <div style="font-size: 12px; color: #059669; font-weight: 600; margin-bottom: 8px;">OVERALL OCCUPANCY</div>
+            <div style="font-family: 'Poppins', sans-serif; font-size: 40px; font-weight: 800; color: #059669;">85%</div>
+            <div style="font-size: 11px; color: #6b7280; margin-top: 8px;">7 of 8 total units occupied</div>
+          </div>
+        </div>
+        <!-- Property Cards -->
+        <div style="margin-bottom: 16px;">
+          <div style="font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 700; color: #1a1a1a; margin-bottom: 12px;">Properties</div>
+          <!-- Property 1 -->
+          <div style="background: #f0f9ff; border-radius: 10px; padding: 14px; margin-bottom: 10px;">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+              <div>
+                <div style="font-weight: 700; color: #1a1a1a; font-size: 13px;">Mumbai 2-BHK</div>
+                <div style="font-size: 11px; color: #6b7280;">2 BHK apartment</div>
+              </div>
+              <div style="text-align: right;">
+                <div style="font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 700; color: #2563eb;">100%</div>
+                <div style="font-size: 10px; color: #6b7280;">2/2 units</div>
+              </div>
+            </div>
+            <div style="height: 4px; background: #dbeafe; border-radius: 2px; overflow: hidden;">
+              <div style="height: 100%; background: #2563eb; width: 100%;"></div>
+            </div>
+          </div>
+          <!-- Property 2 -->
+          <div style="background: #fffbeb; border-radius: 10px; padding: 14px;">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+              <div>
+                <div style="font-weight: 700; color: #1a1a1a; font-size: 13px;">Delhi PG</div>
+                <div style="font-size: 11px; color: #6b7280;">5-room PG</div>
+              </div>
+              <div style="text-align: right;">
+                <div style="font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 700; color: #f59e0b;">80%</div>
+                <div style="font-size: 10px; color: #6b7280;">4/5 rooms</div>
+              </div>
+            </div>
+            <div style="height: 4px; background: #fde68a; border-radius: 2px; overflow: hidden;">
+              <div style="height: 100%; background: #f59e0b; width: 80%;"></div>
+            </div>
+          </div>
+        </div>
+        <!-- Vacant Rooms -->
+        <div style="background: #f3f4f6; border-radius: 10px; padding: 12px; text-align: center;">
+          <div style="font-size: 11px; color: #6b7280; margin-bottom: 4px;">Vacant Rooms</div>
+          <div style="font-family: 'Poppins', sans-serif; font-size: 18px; font-weight: 700; color: #9ca3af;">1 Room</div>
+          <div style="font-size: 10px; color: #6b7280; margin-top: 4px;">Delhi PG • Ready to list</div>
+        </div>
+      </div>
+      <div style="background: #f9f9f9; border-top: 1px solid #f0f0f0; padding: 12px; text-align: center;">
+        <div style="width: 32px; height: 4px; background: #1a1a1a; border-radius: 2px; margin: 0 auto;"></div>
+      </div>
+    </div>
+
+    <div style="padding: 20px;">
+      <h2 style="font-family: 'Poppins', sans-serif; font-size: 18px; font-weight: 700; margin: 0 0 16px; color: #1a1a1a;">Occupancy Summary</h2>
+      <ul style="margin: 0; padding: 0; list-style: none; font-size: 14px; line-height: 1.8; color: #4b5563;">
+        <li style="margin-bottom: 12px;"><strong>Overall percentage</strong> — Big number shows aggregate occupancy across all properties</li>
+        <li style="margin-bottom: 12px;"><strong>Per-property breakdown</strong> — Individual occupancy rates with progress bars</li>
+        <li style="margin-bottom: 12px;"><strong>Unit count</strong> — Shows occupied/total for clarity</li>
+        <li style="margin-bottom: 12px;"><strong>Vacant rooms card</strong> — Highlights available units ready to rent</li>
+        <li style="margin-bottom: 12px;"><strong>Color consistency</strong> — Matches property colors from dashboard</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SCREEN 9: Overdue Streak Tracking -->
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px;">
+    <div style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.1); height: fit-content;">
+      <div style="background: #1a1a1a; color: white; padding: 8px 16px; display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
+        <span>9:41</span>
+        <div style="display: flex; gap: 4px; align-items: center;">
+          <span>📶</span><span>📡</span><span>🔋</span>
+        </div>
+      </div>
+      <div style="background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); padding: 20px; color: white;">
+        <div style="font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: 700;">At Risk Tenants</div>
+        <div style="font-size: 12px; opacity: 0.9; margin-top: 4px;">Action required</div>
+      </div>
+      <div style="padding: 24px;">
+        <!-- High Risk -->
+        <div style="margin-bottom: 24px;">
+          <div style="font-family: 'Poppins', sans-serif; font-size: 12px; font-weight: 700; color: #1a1a1a; margin-bottom: 12px;">🔴 Critical (50+ days overdue)</div>
+          <div style="background: #fee2e2; border-left: 4px solid #dc2626; border-radius: 10px; padding: 14px;">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+              <div>
+                <div style="font-weight: 700; color: #1a1a1a; font-size: 13px;">Amit Patel</div>
+                <div style="font-size: 11px; color: #6b7280;">Mumbai 2-BHK</div>
+              </div>
+              <span style="background: #dc2626; color: white; padding: 4px 10px; border-radius: 6px; font-size: 10px; font-weight: 700;">50 DAYS</span>
+            </div>
+            <div style="font-size: 12px; color: #7f1d1d; margin-bottom: 10px;">Last paid: July 25, 2026 • ₹25,000 pending</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <button style="font-size: 11px; color: #dc2626; font-weight: 700; background: white; border: 1px solid #fecaca; padding: 6px; border-radius: 6px; cursor: pointer;">Call</button>
+              <button style="font-size: 11px; color: white; font-weight: 700; background: #25D366; border: none; padding: 6px; border-radius: 6px; cursor: pointer;">Escalate on WhatsApp</button>
+            </div>
+          </div>
+        </div>
+        <!-- Medium Risk -->
+        <div style="margin-bottom: 24px;">
+          <div style="font-family: 'Poppins', sans-serif; font-size: 12px; font-weight: 700; color: #1a1a1a; margin-bottom: 12px;">🟡 Medium (8-49 days overdue)</div>
+          <div style="background: #fffbeb; border-left: 4px solid #f59e0b; border-radius: 10px; padding: 14px;">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+              <div>
+                <div style="font-weight: 700; color: #1a1a1a; font-size: 13px;">Priya Singh</div>
+                <div style="font-size: 11px; color: #6b7280;">Delhi PG</div>
+              </div>
+              <span style="background: #f59e0b; color: white; padding: 4px 10px; border-radius: 6px; font-size: 10px; font-weight: 700;">8 DAYS</span>
+            </div>
+            <div style="font-size: 12px; color: #92400e; margin-bottom: 10px;">Due: Sept 1 • ₹6,000 pending (1 room)</div>
+            <button style="width: 100%; font-size: 11px; color: #f59e0b; font-weight: 700; background: white; border: 1px solid #fde68a; padding: 8px; border-radius: 6px; cursor: pointer;">Send Reminder</button>
+          </div>
+        </div>
+        <!-- Legend -->
+        <div style="background: #f3f4f6; border-radius: 10px; padding: 12px; font-size: 11px; color: #6b7280; line-height: 1.6;">
+          <strong style="color: #1a1a1a;">Quick Actions:</strong><br>
+          • Call tenant directly<br>
+          • Escalate on WhatsApp<br>
+          • Send automated reminders
+        </div>
+      </div>
+      <div style="background: #f9f9f9; border-top: 1px solid #f0f0f0; padding: 12px; text-align: center;">
+        <div style="width: 32px; height: 4px; background: #1a1a1a; border-radius: 2px; margin: 0 auto;"></div>
+      </div>
+    </div>
+
+    <div style="padding: 20px;">
+      <h2 style="font-family: 'Poppins', sans-serif; font-size: 18px; font-weight: 700; margin: 0 0 16px; color: #1a1a1a;">Overdue Streak Tracking</h2>
+      <ul style="margin: 0; padding: 0; list-style: none; font-size: 14px; line-height: 1.8; color: #4b5563;">
+        <li style="margin-bottom: 12px;"><strong>Risk tiers</strong> — Red (50+ days), yellow (8-49 days), green (on-time)</li>
+        <li style="margin-bottom: 12px;"><strong>Last payment date</strong> — Shows when tenant last paid and how much pending</li>
+        <li style="margin-bottom: 12px;"><strong>Quick action buttons</strong> — Call, escalate, or send reminders instantly</li>
+        <li style="margin-bottom: 12px;"><strong>Days counter</strong> — Bold badge shows exact overdue days</li>
+        <li style="margin-bottom: 12px;"><strong>Property context</strong> — Which property and tenant the overdue relates to</li>
+        <li style="margin-bottom: 12px;"><strong>Escalation path</strong> — Button to mark for legal or collection action</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

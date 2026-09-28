@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>body{margin:0;background:#dfe3ea;font-family:'Inter',sans-serif;color:#0f172a}a{color:#2563eb}a:hover{color:#7c3aed}*{box-sizing:border-box}</style>
+</helmet>
+
+<section style="padding:80px;display:flex;flex-direction:column;gap:32px">
+  <div style="font-family:'Poppins',sans-serif;font-size:28px;font-weight:700">RentMitra · Google Play store listing</div>
+  <div style="display:flex;gap:80px;align-items:flex-start;flex-wrap:wrap">
+
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="font-size:18px;font-weight:600;color:#475569">App icon · 512×512</div>
+      <div id="icon" style="width:512px;height:512px;background:linear-gradient(145deg,#2563eb 0%,#4f46e5 55%,#7c3aed 100%);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden">
+        <div style="position:absolute;width:420px;height:420px;border-radius:50%;background:rgba(255,255,255,0.08);top:-140px;right:-120px"></div>
+        <svg width="330" height="330" viewBox="0 0 100 100" style="position:relative">
+          <path d="M16 47 L50 18 L84 47 V80 Q84 86 78 86 H22 Q16 86 16 80 Z" fill="#ffffff"></path>
+          <text x="50" y="76" text-anchor="middle" font-family="Poppins, sans-serif" font-weight="800" font-size="40" fill="#4f46e5">₹</text>
+          <circle cx="80" cy="24" r="9" fill="#34d399" stroke="#ffffff" stroke-width="3"></circle>
+        </svg>
+      </div>
+      <div style="display:flex;gap:16px;align-items:center">
+        <div style="width:96px;height:96px;border-radius:24px;overflow:hidden;background:linear-gradient(145deg,#2563eb,#4f46e5 55%,#7c3aed);display:flex;align-items:center;justify-content:center">
+          <svg width="62" height="62" viewBox="0 0 100 100"><path d="M16 47 L50 18 L84 47 V80 Q84 86 78 86 H22 Q16 86 16 80 Z" fill="#fff"></path><text x="50" y="76" text-anchor="middle" font-family="Poppins, sans-serif" font-weight="800" font-size="40" fill="#4f46e5">₹</text><circle cx="80" cy="24" r="9" fill="#34d399" stroke="#fff" stroke-width="3"></circle></svg>
+        </div>
+        <div style="font-size:14px;color:#64748b;max-width:220px;line-height:1.5">Preview with Play's rounded mask. Export is a full square, no transparency.</div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="font-size:18px;font-weight:600;color:#475569">Feature graphic · 1024×500</div>
+      <div id="feature" style="width:1024px;height:500px;background:#1e3a8a;position:relative;overflow:hidden;display:flex">
+        <div style="position:absolute;width:760px;height:760px;border-radius:50%;background:radial-gradient(circle,#7c3aed 0%,rgba(124,58,237,0) 65%);right:-220px;top:-200px"></div>
+        <div style="position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,#2563eb 0%,rgba(37,99,235,0) 70%);left:-200px;bottom:-320px"></div>
+        <div style="position:relative;width:540px;padding:0 0 0 64px;display:flex;flex-direction:column;justify-content:center;gap:22px">
+          <div style="display:flex;align-items:center;gap:16px">
+            <div style="width:68px;height:68px;border-radius:18px;background:linear-gradient(145deg,#2563eb,#7c3aed);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(0,0,0,0.25)">
+              <svg width="44" height="44" viewBox="0 0 100 100"><path d="M16 47 L50 18 L84 47 V80 Q84 86 78 86 H22 Q16 86 16 80 Z" fill="#fff"></path><text x="50" y="76" text-anchor="middle" font-family="Poppins, sans-serif" font-weight="800" font-size="40" fill="#4f46e5">₹</text></svg>
+            </div>
+            <div style="font-family:'Poppins',sans-serif;font-size:44px;font-weight:800;color:#fff;letter-spacing:-0.5px">RentMitra</div>
+          </div>
+          <div style="font-family:'Poppins',sans-serif;font-size:40px;line-height:1.15;font-weight:700;color:#fff;text-wrap:pretty">Manage Properties, Track Rent, Get Paid</div>
+          <div style="display:flex;gap:10px">
+            <div style="padding:8px 16px;border-radius:999px;background:rgba(255,255,255,0.14);color:#fff;font-size:16px;font-weight:600">Rentals</div>
+            <div style="padding:8px 16px;border-radius:999px;background:rgba(255,255,255,0.14);color:#fff;font-size:16px;font-weight:600">PGs</div>
+            <div style="padding:8px 16px;border-radius:999px;background:rgba(255,255,255,0.14);color:#fff;font-size:16px;font-weight:600">UPI ready</div>
+          </div>
+        </div>
+        <div style="position:relative;flex:1;display:flex;flex-direction:column;justify-content:center;gap:16px;padding-right:56px">
+          <div style="background:#fff;border-radius:20px;padding:20px 22px;box-shadow:0 18px 40px rgba(15,23,42,0.35);transform:rotate(-3deg)">
+            <div style="font-size:14px;color:#64748b;font-weight:600">September collected</div>
+            <div style="font-family:'Poppins',sans-serif;font-size:34px;font-weight:800;color:#0f172a">₹1,25,000</div>
+            <div style="height:10px;border-radius:5px;background:#e2e8f0;margin-top:10px;overflow:hidden"><div style="width:83%;height:100%;background:linear-gradient(90deg,#2563eb,#7c3aed)"></div></div>
+          </div>
+          <div style="background:#fff;border-radius:16px;padding:14px 18px;display:flex;align-items:center;gap:12px;box-shadow:0 14px 30px rgba(15,23,42,0.3);margin-left:40px">
+            <div style="width:40px;height:40px;border-radius:50%;background:#dbeafe;color:#1d4ed8;font-weight:700;display:flex;align-items:center;justify-content:center">RK</div>
+            <div style="flex:1"><div style="font-weight:700;font-size:16px">Raj Kumar</div><div style="font-size:13px;color:#64748b">Room 101 · ₹12,000</div></div>
+            <div style="padding:6px 12px;border-radius:999px;background:#dcfce7;color:#15803d;font-size:13px;font-weight:700">Paid</div>
+          </div>
+          <div style="background:#fff;border-radius:16px;padding:14px 18px;display:flex;align-items:center;gap:12px;box-shadow:0 14px 30px rgba(15,23,42,0.3)">
+            <div style="width:40px;height:40px;border-radius:50%;background:#fee2e2;color:#b91c1c;font-weight:700;display:flex;align-items:center;justify-content:center">PS</div>
+            <div style="flex:1"><div style="font-weight:700;font-size:16px">Priya Sharma</div><div style="font-size:13px;color:#64748b">Bed 204-B · ₹8,500</div></div>
+            <div style="padding:6px 12px;border-radius:999px;background:#fee2e2;color:#b91c1c;font-size:13px;font-weight:700">Overdue 12d</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding:0 80px 120px;display:flex;flex-direction:column;gap:32px">
+  <div style="font-family:'Poppins',sans-serif;font-size:28px;font-weight:700">Phone screenshots · 1080×1920</div>
+  <div style="display:flex;gap:64px;align-items:flex-start">
+
+    <!-- 1 Dashboard -->
+    <div id="shot1" data-screen-label="01 Dashboard" style="width:1080px;height:1920px;flex-shrink:0;background:#1d4ed8;position:relative;overflow:hidden">
+      <div style="position:absolute;width:1100px;height:1100px;border-radius:50%;background:radial-gradient(circle,#7c3aed 0%,rgba(124,58,237,0) 65%);right:-500px;top:-450px"></div>
+      <div style="position:relative;padding:130px 110px 0;display:flex;flex-direction:column;gap:24px">
+        <div style="font-family:'Poppins',sans-serif;font-size:86px;line-height:1.05;font-weight:800;color:#fff;letter-spacing:-1px">Every rupee,<br>at a glance</div>
+        <div style="font-size:40px;line-height:1.35;color:#dbeafe">See who's Paid, Pending or Overdue this month.</div>
+      </div>
+      <div style="position:absolute;left:150px;top:470px;width:780px;height:1500px;background:#0f172a;border-radius:96px;padding:20px;box-shadow:0 40px 80px rgba(0,0,0,0.35)">
+        <div style="width:740px;height:1460px;border-radius:78px;overflow:hidden;background:#f8fafc">
+          <div style="width:390px;height:770px;transform:scale(1.8974);transform-origin:top left;display:flex;flex-direction:column">
+            <div style="height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600"><span>9:41</span><div style="width:96px;height:26px;border-radius:14px;background:#0f172a"></div><div style="width:24px;height:11px;border-radius:3px;border:1.5px solid #0f172a;padding:1px"><div style="width:70%;height:100%;background:#0f172a;border-radius:1px"></div></div></div>
+            <div style="padding:8px 18px 0;display:flex;flex-direction:column;gap:14px">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div><div style="font-size:12px;color:#64748b">Namaste, Rakesh</div><div style="font-family:'Poppins',sans-serif;font-size:20px;font-weight:700">September rent</div></div>
+                <div style="width:40px;height:40px;border-radius:50%;background:#fff;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;position:relative;font-size:16px">🔔<div style="position:absolute;top:6px;right:8px;width:8px;height:8px;border-radius:50%;background:#dc2626"></div></div>
+              </div>
+              <div style="border-radius:20px;padding:18px;background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff">
+                <div style="font-size:12px;opacity:0.85">Collected</div>
+                <div style="font-family:'Poppins',sans-serif;font-size:30px;font-weight:800">₹1,25,000</div>
+                <div style="font-size:12px;opacity:0.85">of ₹1,50,000 expected · 83%</div>
+                <div style="height:7px;border-radius:4px;background:rgba(255,255,255,0.25);margin-top:10px;overflow:hidden"><div style="width:83%;height:100%;background:#fff"></div></div>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+                <div style="background:#dcfce7;border-radius:14px;padding:10px 12px"><div style="font-family:'Poppins',sans-serif;font-size:20px;font-weight:700;color:#15803d">12</div><div style="font-size:11px;font-weight:600;color:#15803d">Paid</div></div>
+                <div style="background:#fef3c7;border-radius:14px;padding:10px 12px"><div style="font-family:'Poppins',sans-serif;font-size:20px;font-weight:700;color:#b45309">3</div><div style="font-size:11px;font-weight:600;color:#b45309">Pending</div></div>
+                <div style="background:#fee2e2;border-radius:14px;padding:10px 12px"><div style="font-family:'Poppins',sans-serif;font-size:20px;font-weight:700;color:#b91c1c">2</div><div style="font-size:11px;font-weight:600;color:#b91c1c">Overdue</div></div>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">
+                <sc-for list="{{ quick }}" as="q" hint-placeholder-count="4">
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:6px"><div style="width:48px;height:48px;border-radius:16px;background:#eef2ff;color:#4f46e5;font-size:20px;font-weight:700;display:flex;align-items:center;justify-content:center">{{ q.icon }}</div><div style="font-size:11px;font-weight:600;color:#334155">{{ q.label }}</div></div>
+                </sc-for>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center"><div style="font-family:'Poppins',sans-serif;font-size:15px;font-weight:700">Tenants</div><div style="font-size:12px;color:#2563eb;font-weight:600">See all</div></div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <sc-for list="{{ tenants }}" as="t" hint-placeholder-count="4">
+                  <div style="background:#fff;border:1px solid #eef2f7;border-radius:14px;padding:10px 12px;display:flex;align-items:center;gap:10px">
+                    <div style="width:36px;height:36px;border-radius:50%;background:{{ t.avBg }};color:{{ t.fg }};font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center">{{ t.ini }}</div>
+                    <div style="flex:1"><div style="font-size:13px;font-weight:700">{{ t.name }}</div><div style="font-size:11px;color:#64748b">{{ t.room }}</div></div>
+                    <div style="text-align:right"><div style="font-size:13px;font-weight:700">{{ t.amt }}</div><div style="font-size:10px;font-weight:700;color:{{ t.fg }}">{{ t.status }}</div></div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2 Properties -->
+    <div id="shot2" data-screen-label="02 Properties" style="width:1080px;height:1920px;flex-shrink:0;background:#eef2ff;position:relative;overflow:hidden">
+      <div style="position:relative;padding:130px 110px 0;display:flex;flex-direction:column;gap:24px">
+        <div style="font-family:'Poppins',sans-serif;font-size:86px;line-height:1.05;font-weight:800;color:#1e1b4b;letter-spacing:-1px">Rentals and PGs,<br>together</div>
+        <div style="font-size:40px;line-height:1.35;color:#475569">Track rooms, beds and occupancy for every property.</div>
+      </div>
+      <div style="position:absolute;left:150px;top:470px;width:780px;height:1500px;background:#0f172a;border-radius:96px;padding:20px;box-shadow:0 40px 80px rgba(30,27,75,0.25)">
+        <div style="width:740px;height:1460px;border-radius:78px;overflow:hidden;background:#f8fafc">
+          <div style="width:390px;height:770px;transform:scale(1.8974);transform-origin:top left;display:flex;flex-direction:column">
+            <div style="height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600"><span>9:41</span><div style="width:96px;height:26px;border-radius:14px;background:#0f172a"></div><div style="width:24px;height:11px;border-radius:3px;border:1.5px solid #0f172a;padding:1px"><div style="width:70%;height:100%;background:#0f172a;border-radius:1px"></div></div></div>
+            <div style="padding:8px 18px 0;display:flex;flex-direction:column;gap:14px">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div><div style="font-family:'Poppins',sans-serif;font-size:22px;font-weight:700">Properties</div><div style="font-size:12px;color:#64748b">4 properties · 26 units</div></div>
+                <div style="padding:9px 14px;border-radius:12px;background:#2563eb;color:#fff;font-size:13px;font-weight:700">+ Add</div>
+              </div>
+              <div style="display:flex;gap:6px;background:#eef2f7;border-radius:12px;padding:4px">
+                <div style="flex:1;text-align:center;padding:8px;border-radius:9px;background:#fff;font-size:12px;font-weight:700;box-shadow:0 1px 3px rgba(0,0,0,0.08)">All</div>
+                <div style="flex:1;text-align:center;padding:8px;font-size:12px;font-weight:600;color:#64748b">Rental</div>
+                <div style="flex:1;text-align:center;padding:8px;font-size:12px;font-weight:600;color:#64748b">PG</div>
+              </div>
+              <sc-for list="{{ props }}" as="p" hint-placeholder-count="4">
+                <div style="background:#fff;border:1px solid #eef2f7;border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:10px">
+                  <div style="display:flex;gap:12px;align-items:center">
+                    <div style="width:44px;height:44px;border-radius:14px;background:{{ p.bg }};color:{{ p.fg }};font-family:'Poppins',sans-serif;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center">{{ p.abbr }}</div>
+                    <div style="flex:1"><div style="font-size:14px;font-weight:700">{{ p.name }}</div><div style="font-size:11px;color:#64748b">{{ p.area }}</div></div>
+                    <div style="padding:4px 10px;border-radius:999px;background:{{ p.bg }};color:{{ p.fg }};font-size:10px;font-weight:700">{{ p.type }}</div>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;font-size:11px;color:#475569"><span>{{ p.occ }}</span><span style="font-weight:700;color:#0f172a">{{ p.amt }}</span></div>
+                  <div style="height:6px;border-radius:3px;background:#eef2f7;overflow:hidden"><div style="width:{{ p.pct }};height:100%;background:{{ p.fg }}"></div></div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3 Tenants -->
+    <div id="shot3" data-screen-label="03 Tenants" style="width:1080px;height:1920px;flex-shrink:0;background:#6d28d9;position:relative;overflow:hidden">
+      <div style="position:absolute;width:1000px;height:1000px;border-radius:50%;background:radial-gradient(circle,#2563eb 0%,rgba(37,99,235,0) 65%);left:-480px;top:-420px"></div>
+      <div style="position:relative;padding:130px 110px 0;display:flex;flex-direction:column;gap:24px">
+        <div style="font-family:'Poppins',sans-serif;font-size:86px;line-height:1.05;font-weight:800;color:#fff;letter-spacing:-1px">Add a tenant<br>in 60 seconds</div>
+        <div style="font-size:40px;line-height:1.35;color:#ede9fe">Room, rent, due date and UPI ID. Done.</div>
+      </div>
+      <div style="position:absolute;left:150px;top:470px;width:780px;height:1500px;background:#0f172a;border-radius:96px;padding:20px;box-shadow:0 40px 80px rgba(0,0,0,0.35)">
+        <div style="width:740px;height:1460px;border-radius:78px;overflow:hidden;background:#f8fafc">
+          <div style="width:390px;height:770px;transform:scale(1.8974);transform-origin:top left;display:flex;flex-direction:column">
+            <div style="height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600"><span>9:41</span><div style="width:96px;height:26px;border-radius:14px;background:#0f172a"></div><div style="width:24px;height:11px;border-radius:3px;border:1.5px solid #0f172a;padding:1px"><div style="width:70%;height:100%;background:#0f172a;border-radius:1px"></div></div></div>
+            <div style="padding:8px 18px 0;display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;align-items:center;gap:12px">
+                <div style="width:36px;height:36px;border-radius:50%;background:#fff;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;font-size:16px">←</div>
+                <div style="flex:1"><div style="font-family:'Poppins',sans-serif;font-size:19px;font-weight:700">Add tenant</div><div style="font-size:11px;color:#64748b">Sunrise PG · Koramangala</div></div>
+              </div>
+              <sc-for list="{{ fields }}" as="f" hint-placeholder-count="5">
+                <div style="display:flex;flex-direction:column;gap:5px">
+                  <div style="font-size:11px;font-weight:600;color:#475569">{{ f.label }}</div>
+                  <div style="background:#fff;border:1.5px solid {{ f.border }};border-radius:12px;padding:11px 12px;font-size:13px;font-weight:600;color:#0f172a">{{ f.value }}</div>
+                </div>
+              </sc-for>
+              <div style="display:flex;flex-direction:column;gap:5px">
+                <div style="font-size:11px;font-weight:600;color:#475569">Rent due on</div>
+                <div style="display:flex;gap:8px">
+                  <div style="flex:1;text-align:center;padding:10px;border-radius:12px;background:#2563eb;color:#fff;font-size:12px;font-weight:700">1st</div>
+                  <div style="flex:1;text-align:center;padding:10px;border-radius:12px;background:#fff;border:1.5px solid #e2e8f0;font-size:12px;font-weight:600">5th</div>
+                  <div style="flex:1;text-align:center;padding:10px;border-radius:12px;background:#fff;border:1.5px solid #e2e8f0;font-size:12px;font-weight:600">10th</div>
+                  <div style="flex:1;text-align:center;padding:10px;border-radius:12px;background:#fff;border:1.5px solid #e2e8f0;font-size:12px;font-weight:600">Custom</div>
+                </div>
+              </div>
+              <div style="margin-top:4px;padding:14px;border-radius:14px;background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;text-align:center;font-family:'Poppins',sans-serif;font-size:14px;font-weight:700">Save tenant</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 Payments -->
+    <div id="shot4" data-screen-label="04 Payments" style="width:1080px;height:1920px;flex-shrink:0;background:#ecfdf5;position:relative;overflow:hidden">
+      <div style="position:relative;padding:130px 110px 0;display:flex;flex-direction:column;gap:24px">
+        <div style="font-family:'Poppins',sans-serif;font-size:86px;line-height:1.05;font-weight:800;color:#064e3b;letter-spacing:-1px">One tap to<br>mark it paid</div>
+        <div style="font-size:40px;line-height:1.35;color:#475569">Copy UPI IDs, record payments, send reminders.</div>
+      </div>
+      <div style="position:absolute;left:150px;top:470px;width:780px;height:1500px;background:#0f172a;border-radius:96px;padding:20px;box-shadow:0 40px 80px rgba(6,78,59,0.25)">
+        <div style="width:740px;height:1460px;border-radius:78px;overflow:hidden;background:#f8fafc">
+          <div style="width:390px;height:770px;transform:scale(1.8974);transform-origin:top left;display:flex;flex-direction:column">
+            <div style="height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600"><span>9:41</span><div style="width:96px;height:26px;border-radius:14px;background:#0f172a"></div><div style="width:24px;height:11px;border-radius:3px;border:1.5px solid #0f172a;padding:1px"><div style="width:70%;height:100%;background:#0f172a;border-radius:1px"></div></div></div>
+            <div style="padding:8px 18px 0;display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;align-items:center;gap:12px">
+                <div style="width:52px;height:52px;border-radius:50%;background:#fee2e2;color:#b91c1c;font-family:'Poppins',sans-serif;font-weight:700;font-size:17px;display:flex;align-items:center;justify-content:center">PS</div>
+                <div style="flex:1"><div style="font-family:'Poppins',sans-serif;font-size:19px;font-weight:700">Priya Sharma</div><div style="font-size:11px;color:#64748b">Sunrise PG · Room 204, Bed B</div></div>
+              </div>
+              <div style="display:flex;gap:6px">
+                <div style="padding:5px 10px;border-radius:999px;background:#fee2e2;color:#b91c1c;font-size:11px;font-weight:700">Overdue · 12 days</div>
+                <div style="padding:5px 10px;border-radius:999px;background:#fff7ed;color:#c2410c;font-size:11px;font-weight:700">Late 2 months in a row</div>
+              </div>
+              <div style="background:#fff;border:1px solid #eef2f7;border-radius:16px;padding:14px;display:flex;align-items:center;gap:10px">
+                <div style="flex:1"><div style="font-size:11px;color:#64748b;font-weight:600">Tenant UPI ID</div><div style="font-size:15px;font-weight:700">priya.s@okhdfc</div></div>
+                <div style="padding:9px 14px;border-radius:10px;background:#eef2ff;color:#4f46e5;font-size:12px;font-weight:700">Copy</div>
+              </div>
+              <div style="background:#fff;border:1px solid #eef2f7;border-radius:16px;padding:14px;display:flex;justify-content:space-between;align-items:center">
+                <div><div style="font-size:11px;color:#64748b;font-weight:600">September due</div><div style="font-family:'Poppins',sans-serif;font-size:24px;font-weight:800">₹8,500</div></div>
+                <div style="font-size:11px;color:#64748b;text-align:right">Due 1 Sep<br>Reminder sent 2×</div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                <div style="padding:13px;border-radius:14px;background:#059669;color:#fff;text-align:center;font-size:13px;font-weight:700">✓ Mark as paid</div>
+                <div style="padding:13px;border-radius:14px;background:#fff;border:1.5px solid #e2e8f0;text-align:center;font-size:13px;font-weight:700">Send reminder</div>
+              </div>
+              <div style="font-family:'Poppins',sans-serif;font-size:15px;font-weight:700;margin-top:4px">Payment history</div>
+              <div style="background:#fff;border:1px solid #eef2f7;border-radius:16px;padding:4px 14px">
+                <sc-for list="{{ history }}" as="h" hint-placeholder-count="4">
+                  <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f1f5f9">
+                    <div style="width:10px;height:10px;border-radius:50%;background:{{ h.fg }}"></div>
+                    <div style="flex:1"><div style="font-size:13px;font-weight:700">{{ h.month }}</div><div style="font-size:11px;color:#64748b">{{ h.note }}</div></div>
+                    <div style="text-align:right"><div style="font-size:13px;font-weight:700">₹8,500</div><div style="font-size:10px;font-weight:700;color:{{ h.fg }}">{{ h.status }}</div></div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5 Reports -->
+    <div id="shot5" data-screen-label="05 Reports" style="width:1080px;height:1920px;flex-shrink:0;background:#1d4ed8;position:relative;overflow:hidden">
+      <div style="position:absolute;width:1100px;height:1100px;border-radius:50%;background:radial-gradient(circle,#7c3aed 0%,rgba(124,58,237,0) 65%);right:-500px;top:-450px"></div>
+      <div style="position:relative;padding:130px 110px 0;display:flex;flex-direction:column;gap:24px">
+        <div style="font-family:'Poppins',sans-serif;font-size:86px;line-height:1.05;font-weight:800;color:#fff;letter-spacing:-1px">Monthly reports,<br>ready to share</div>
+        <div style="font-size:40px;line-height:1.35;color:#dbeafe">Income by property, exportable as PDF.</div>
+      </div>
+      <div style="position:absolute;left:150px;top:470px;width:780px;height:1500px;background:#0f172a;border-radius:96px;padding:20px;box-shadow:0 40px 80px rgba(0,0,0,0.35)">
+        <div style="width:740px;height:1460px;border-radius:78px;overflow:hidden;background:#f8fafc">
+          <div style="width:390px;height:770px;transform:scale(1.8974);transform-origin:top left;display:flex;flex-direction:column">
+            <div style="height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600"><span>9:41</span><div style="width:96px;height:26px;border-radius:14px;background:#0f172a"></div><div style="width:24px;height:11px;border-radius:3px;border:1.5px solid #0f172a;padding:1px"><div style="width:70%;height:100%;background:#0f172a;border-radius:1px"></div></div></div>
+            <div style="padding:8px 18px 0;display:flex;flex-direction:column;gap:14px">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div style="font-family:'Poppins',sans-serif;font-size:22px;font-weight:700">Income report</div>
+                <div style="padding:8px 12px;border-radius:10px;background:#fff;border:1px solid #e2e8f0;font-size:12px;font-weight:600">Sep 2026 ▾</div>
+              </div>
+              <div style="background:#fff;border:1px solid #eef2f7;border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:12px">
+                <div style="display:flex;justify-content:space-between;align-items:flex-end">
+                  <div><div style="font-size:11px;color:#64748b;font-weight:600">Total income</div><div style="font-family:'Poppins',sans-serif;font-size:28px;font-weight:800">₹1,25,000</div></div>
+                  <div style="padding:5px 10px;border-radius:999px;background:#dcfce7;color:#15803d;font-size:11px;font-weight:700">+8% vs Aug</div>
+                </div>
+                <div style="display:flex;align-items:flex-end;gap:10px;height:130px">
+                  <sc-for list="{{ bars }}" as="b" hint-placeholder-count="6">
+                    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end">
+                      <div style="width:100%;height:{{ b.h }};border-radius:8px;background:{{ b.bg }}"></div>
+                      <div style="font-size:10px;font-weight:600;color:#64748b">{{ b.m }}</div>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+              <div style="font-family:'Poppins',sans-serif;font-size:15px;font-weight:700">By property</div>
+              <div style="background:#fff;border:1px solid #eef2f7;border-radius:16px;padding:4px 14px">
+                <sc-for list="{{ breakdown }}" as="r" hint-placeholder-count="4">
+                  <div style="display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid #f1f5f9">
+                    <div style="width:10px;height:10px;border-radius:3px;background:{{ r.c }}"></div>
+                    <div style="flex:1;font-size:13px;font-weight:600">{{ r.name }}</div>
+                    <div style="font-size:13px;font-weight:700">{{ r.amt }}</div>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                <div style="padding:13px;border-radius:14px;background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;text-align:center;font-size:13px;font-weight:700">Download PDF</div>
+                <div style="padding:13px;border-radius:14px;background:#fff;border:1.5px solid #e2e8f0;text-align:center;font-size:13px;font-weight:700">Share</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    const G = { avBg: '#dcfce7', fg: '#15803d', status: 'Paid' };
+    const A = { avBg: '#fef3c7', fg: '#b45309', status: 'Pending' };
+    const R = { avBg: '#fee2e2', fg: '#b91c1c', status: 'Overdue' };
+    return {
+      quick: [{ icon: '+', label: 'Add tenant' }, { icon: '✓', label: 'Mark paid' }, { icon: '!', label: 'Remind' }, { icon: '₹', label: 'Reports' }],
+      tenants: [
+        { ...G, ini: 'RK', name: 'Raj Kumar', room: 'Green Villa · Flat 101', amt: '₹12,000' },
+        { ...R, ini: 'PS', name: 'Priya Sharma', room: 'Sunrise PG · Bed 204-B', amt: '₹8,500' },
+        { ...A, ini: 'AP', name: 'Amit Patel', room: 'Sunrise PG · Bed 108-A', amt: '₹7,500' },
+        { ...G, ini: 'SN', name: 'Sneha Nair', room: 'Lake View · 2BHK', amt: '₹22,000' }
+      ],
+      props: [
+        { abbr: 'SP', name: 'Sunrise PG', area: 'Koramangala, Bengaluru', type: 'PG', occ: '18 of 20 beds filled', amt: '₹1,42,000/mo', pct: '90%', bg: '#fff7ed', fg: '#ea580c' },
+        { abbr: 'GV', name: 'Green Villa', area: 'Andheri West, Mumbai', type: 'Rental', occ: '3 of 4 flats filled', amt: '₹48,000/mo', pct: '75%', bg: '#eff6ff', fg: '#2563eb' },
+        { abbr: 'LV', name: 'Lake View 2BHK', area: 'Powai, Mumbai', type: 'Rental', occ: '1 of 1 filled', amt: '₹22,000/mo', pct: '100%', bg: '#eff6ff', fg: '#2563eb' },
+        { abbr: 'SH', name: 'Shanti Girls PG', area: 'Kothrud, Pune', type: 'PG', occ: '7 of 12 beds filled', amt: '₹49,000/mo', pct: '58%', bg: '#f5f3ff', fg: '#7c3aed' }
+      ],
+      fields: [
+        { label: 'Full name', value: 'Priya Sharma', border: '#2563eb' },
+        { label: 'Mobile number', value: '+91 98765 43210', border: '#e2e8f0' },
+        { label: 'Room / Bed', value: 'Room 204 · Bed B', border: '#e2e8f0' },
+        { label: 'Monthly rent', value: '₹8,500', border: '#e2e8f0' },
+        { label: 'Tenant UPI ID (optional)', value: 'priya.s@okhdfc', border: '#e2e8f0' }
+      ],
+      history: [
+        { month: 'September 2026', note: 'Due 1 Sep', status: 'Overdue', fg: '#dc2626' },
+        { month: 'August 2026', note: 'Paid 9 Aug · UPI', status: 'Paid late', fg: '#d97706' },
+        { month: 'July 2026', note: 'Paid 6 Jul · Cash', status: 'Paid late', fg: '#d97706' },
+        { month: 'June 2026', note: 'Paid 1 Jun · UPI', status: 'Paid', fg: '#059669' }
+      ],
+      bars: [['Apr', '58%'], ['May', '66%'], ['Jun', '62%'], ['Jul', '74%'], ['Aug', '80%'], ['Sep', '92%']].map(([m, h], i) => ({ m, h, bg: i === 5 ? 'linear-gradient(180deg,#7c3aed,#2563eb)' : '#dbeafe' })),
+      breakdown: [
+        { name: 'Sunrise PG', amt: '₹62,500', c: '#ea580c' },
+        { name: 'Green Villa', amt: '₹36,000', c: '#2563eb' },
+        { name: 'Lake View 2BHK', amt: '₹22,000', c: '#0ea5e9' },
+        { name: 'Shanti Girls PG', amt: '₹4,500', c: '#7c3aed' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

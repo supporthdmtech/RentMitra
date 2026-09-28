@@ -1,0 +1,23 @@
+{
+  "name": "rentmitra",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "node node_modules/next/dist/bin/next dev",
+    "build": "node node_modules/next/dist/bin/next build",
+    "start": "node node_modules/next/dist/bin/next start"
+  },
+  "dependencies": {
+    "next": "^15.3.9",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "@supabase/supabase-js": "^2.45.4",
+    "@supabase/ssr": "^0.5.1",
+    "jspdf": "^4.2.1"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.13",
+    "postcss": "^8.4.47",
+    "autoprefixer": "^10.4.20"
+  }
+}
