@@ -29,8 +29,8 @@ export default function PaymentCard({ payment, subtitle, onMarkPaid, onUndo, onR
               {status === "paid"
                 ? `Paid ${formatDate(payment.paid_at)}`
                 : status === "overdue"
-                ? `Due ${formatDate(payment.period_month)} • ${daysOverdue(payment)} days overdue`
-                : `Due ${formatDate(payment.period_month)}${
+                ? `Due ${formatDate(payment.due_date)} • ${daysOverdue(payment)} days overdue`
+                : `Due ${formatDate(payment.due_date)}${
                     daysUntilDue(payment) >= 0 ? ` • in ${daysUntilDue(payment)} days` : ""
                   }`}
             </div>

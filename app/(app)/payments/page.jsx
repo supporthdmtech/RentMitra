@@ -1,46 +1,36 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
-  getPaymentsForMonth,
+  getAllPaymentsForOwner,
   getProfile,
   markPaymentPaid,
   undoPaymentPaid,
 } from "@/lib/queries";
 import { buildWhatsAppReminderUrl } from "@/lib/whatsapp";
+import { paymentStatus } from "@/lib/dueDate";
 import PaymentCard from "@/components/PaymentCard";
 
-function lastSixMonths() {
-  const months = [];
-  const now = new Date();
-  for (let i = 0; i < 6; i++) {
-    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-    months.push({
-      value: d.toISOString().slice(0, 10),
-      label: d.toLocaleDateString("en-IN", { month: "short" }),
-    });
-  }
-  return months;
-}
+const FILTERS = [
+  { value: "all", label: "All" },
+  { value: "overdue", label: "Overdue" },
+  { value: "pending", label: "Pending" },
+  { value: "paid", label: "Paid" },
+];
 
 export default function PaymentsPage() {
-  const months = useMemo(lastSixMonths, []);
-  const [selectedMonth, setSelectedMonth] = useState(months[0].value);
+  const [filter, setFilter] = useState("all");
   const [payments, setPayments] = useState([]);
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getProfile().then(setProfile);
-  }, []);
-
-  useEffect(() => {
-    setLoading(true);
-    getPaymentsForMonth(selectedMonth).then((data) => {
-      setPayments(data);
+    Promise.all([getAllPaymentsForOwner(), getProfile()]).then(([paymentData, profileData]) => {
+      setPayments(paymentData);
+      setProfile(profileData);
       setLoading(false);
     });
-  }, [selectedMonth]);
+  }, []);
 
   async function handleMarkPaid(payment) {
     await markPaymentPaid(payment);
@@ -64,6 +54,8 @@ export default function PaymentsPage() {
     window.open(url, "_blank");
   }
 
+  const filtered = filter === "all" ? payments : payments.filter((p) => paymentStatus(p) === filter);
+
   return (
     <div>
       <div className="bg-gradient-to-br from-emerald-600 to-emerald-500 px-5 pb-4 pt-6 text-white">
@@ -72,28 +64,28 @@ export default function PaymentsPage() {
 
       <div className="p-5">
         <div className="mb-5 flex gap-2 overflow-x-auto pb-1">
-          {months.map((m) => (
+          {FILTERS.map((f) => (
             <button
-              key={m.value}
-              onClick={() => setSelectedMonth(m.value)}
+              key={f.value}
+              onClick={() => setFilter(f.value)}
               className={`whitespace-nowrap rounded-lg px-3.5 py-2 text-xs font-semibold ${
-                selectedMonth === m.value
+                filter === f.value
                   ? "bg-sky-100 text-sky-700"
                   : "border border-gray-200 bg-white text-gray-500"
               }`}
             >
-              {m.label}
+              {f.label}
             </button>
           ))}
         </div>
 
         {loading ? (
           <p className="text-sm text-gray-500">Loading…</p>
-        ) : payments.length === 0 ? (
-          <p className="text-sm text-gray-500">No rent records for this month.</p>
+        ) : filtered.length === 0 ? (
+          <p className="text-sm text-gray-500">No rent records here.</p>
         ) : (
           <div className="flex flex-col gap-3">
-            {payments.map((payment) => (
+            {filtered.map((payment) => (
               <PaymentCard
                 key={payment.id}
                 payment={payment}

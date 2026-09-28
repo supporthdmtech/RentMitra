@@ -5,10 +5,11 @@ import Link from "next/link";
 import {
   getActiveProperties,
   getAllActiveTenants,
-  getPaymentsForMonth,
+  getAllPaymentsForOwner,
   getProfile,
+  latestPerTenant,
 } from "@/lib/queries";
-import { currentPeriodMonth, formatCurrency, formatMonthYear, paymentStatus } from "@/lib/dueDate";
+import { formatCurrency, paymentStatus } from "@/lib/dueDate";
 
 export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
@@ -23,12 +24,13 @@ export default function DashboardPage() {
         getProfile(),
         getActiveProperties(),
         getAllActiveTenants(),
-        getPaymentsForMonth(currentPeriodMonth()),
+        getAllPaymentsForOwner(),
       ]);
       setProfile(profileData);
       setProperties(propertyData);
       setTenants(tenantData);
-      setPayments(paymentData);
+      // Each tenant's current rent cycle, not a shared calendar month.
+      setPayments(latestPerTenant(paymentData));
       setLoading(false);
     }
     load();
@@ -49,9 +51,6 @@ export default function DashboardPage() {
             <div className="font-heading text-xl font-bold">
               Welcome, {profile?.full_name || "Owner"}
             </div>
-            <div className="mt-1 text-xs opacity-90">
-              {formatMonthYear(new Date())}
-            </div>
           </div>
           <Link
             href="/profile"
@@ -63,7 +62,7 @@ export default function DashboardPage() {
 
         <div className="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur">
           <div className="mb-1.5 text-[11px] uppercase tracking-wide opacity-85">
-            This Month&apos;s Income
+            Current Rent Cycle
           </div>
           <div className="font-heading text-3xl font-extrabold">
             {formatCurrency(totalIncome)}

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { createTenant } from "@/lib/queries";
-import { currentPeriodMonth } from "@/lib/dueDate";
+import { todayIso } from "@/lib/dueDate";
 import GradientHeader from "@/components/GradientHeader";
 
 export default function AddTenantPage() {
@@ -14,7 +14,7 @@ export default function AddTenantPage() {
     room_no: "",
     monthly_rent: "",
     phone: "",
-    move_in_date: currentPeriodMonth().slice(0, 10),
+    move_in_date: todayIso(),
   });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");

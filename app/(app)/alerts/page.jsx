@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { getProfile, getRecentlyPaidPayments, getUnpaidPayments } from "@/lib/queries";
+import { getProfile, getRecentlyPaidPayments, getUnpaidPayments, oldestUnpaidPerTenant } from "@/lib/queries";
 import { daysOverdue, daysUntilDue, formatCurrency, formatDate, paymentStatus } from "@/lib/dueDate";
 import { buildWhatsAppReminderUrl } from "@/lib/whatsapp";
 
@@ -29,9 +29,11 @@ export default function AlertsPage() {
     load();
   }, []);
 
-  const overdue = unpaid
-    .filter((p) => paymentStatus(p) === "overdue")
-    .sort((a, b) => daysOverdue(b) - daysOverdue(a));
+  // A tenant who's missed several cycles has several unpaid rows — collapse
+  // to their oldest (worst) one so they show up once, not several times.
+  const overdue = oldestUnpaidPerTenant(unpaid.filter((p) => paymentStatus(p) === "overdue")).sort(
+    (a, b) => daysOverdue(b) - daysOverdue(a)
+  );
   const dueSoon = unpaid.filter((p) => paymentStatus(p) === "pending");
 
   const activeCount = overdue.length + dueSoon.length + recentlyPaid.length;
@@ -70,7 +72,7 @@ export default function AlertsPage() {
                 tone="red"
                 title="⚠️ Overdue Payment"
                 badge={`${daysOverdue(p)} days`}
-                body={`${p.tenant?.name} hasn't paid rent for ${p.property?.name} since ${formatDate(p.period_month)}`}
+                body={`${p.tenant?.name} hasn't paid rent for ${p.property?.name} since ${formatDate(p.due_date)}`}
                 actionLabel="Follow Up"
                 actionHref={p.tenant?.phone ? remindUrl(p) : undefined}
               />
@@ -80,8 +82,8 @@ export default function AlertsPage() {
                 key={p.id}
                 tone="amber"
                 title="⏰ Due Soon"
-                badge={formatDate(p.period_month)}
-                body={`${p.tenant?.name}'s rent for ${p.property?.name} is due on ${formatDate(p.period_month)}${
+                badge={formatDate(p.due_date)}
+                body={`${p.tenant?.name}'s rent for ${p.property?.name} is due on ${formatDate(p.due_date)}${
                   daysUntilDue(p) >= 0 ? ` (in ${daysUntilDue(p)} days)` : ""
                 }`}
                 actionLabel="Send Reminder"

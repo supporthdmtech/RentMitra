@@ -2,20 +2,20 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { getActiveProperties, getPaymentsInRange } from "@/lib/queries";
-import { currentPeriodMonth, formatCurrency, formatMonthYear, paymentStatus } from "@/lib/dueDate";
+import { addDays, formatCurrency, formatDate, paymentStatus, todayIso } from "@/lib/dueDate";
 import { downloadIncomeReportPdf } from "@/lib/reportPdf";
 import { downloadCsv } from "@/lib/csv";
 
-function endOfMonth(periodMonth) {
-  const d = new Date(periodMonth);
-  return new Date(d.getFullYear(), d.getMonth() + 1, 0).toISOString().slice(0, 10);
+function last30DaysRange() {
+  const to = todayIso();
+  return { from: addDays(to, -30), to };
 }
 
 export default function ReportsPage() {
-  const thisMonth = useMemo(() => currentPeriodMonth(), []);
-  const [mode, setMode] = useState("month"); // "month" | "range"
-  const [from, setFrom] = useState(thisMonth);
-  const [to, setTo] = useState(endOfMonth(thisMonth));
+  const defaultRange = useMemo(last30DaysRange, []);
+  const [mode, setMode] = useState("recent"); // "recent" | "range"
+  const [from, setFrom] = useState(defaultRange.from);
+  const [to, setTo] = useState(defaultRange.to);
   const [properties, setProperties] = useState([]);
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -56,7 +56,7 @@ export default function ReportsPage() {
     })
     .filter((p) => p.tenantCount > 0);
 
-  const rangeLabel = mode === "month" ? formatMonthYear(from) : `${from} to ${to}`;
+  const rangeLabel = `${formatDate(from)} – ${formatDate(to)}`;
 
   function handleDownloadPdf() {
     downloadIncomeReportPdf({ rangeLabel, properties: byProperty, totals });
@@ -68,7 +68,7 @@ export default function ReportsPage() {
       payments.map((p) => ({
         property: p.property?.name,
         tenant: p.tenant?.name,
-        period_month: p.period_month,
+        due_date: p.due_date,
         amount_due: p.amount_due,
         status: paymentStatus(p),
         paid_at: p.paid_at || "",
@@ -87,13 +87,13 @@ export default function ReportsPage() {
         <div className="mb-5 flex gap-2 text-xs font-semibold">
           <button
             onClick={() => {
-              setMode("month");
-              setFrom(thisMonth);
-              setTo(endOfMonth(thisMonth));
+              setMode("recent");
+              setFrom(defaultRange.from);
+              setTo(defaultRange.to);
             }}
-            className={`rounded-lg px-3 py-1.5 ${mode === "month" ? "bg-purple-100 text-purple-700" : "border border-gray-200 text-gray-500"}`}
+            className={`rounded-lg px-3 py-1.5 ${mode === "recent" ? "bg-purple-100 text-purple-700" : "border border-gray-200 text-gray-500"}`}
           >
-            This month
+            Last 30 days
           </button>
           <button
             onClick={() => setMode("range")}

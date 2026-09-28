@@ -4,12 +4,13 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import {
-  getPaymentsForPropertyMonth,
+  getPaymentsForProperty,
   getProperty,
   getTenantsByProperty,
+  latestPerTenant,
   softDeleteProperty,
 } from "@/lib/queries";
-import { currentPeriodMonth, formatCurrency, paymentStatus } from "@/lib/dueDate";
+import { formatCurrency, paymentStatus } from "@/lib/dueDate";
 import StatusPill from "@/components/StatusPill";
 
 export default function PropertyDetailPage() {
@@ -29,11 +30,12 @@ export default function PropertyDetailPage() {
     const [propertyData, tenantData, paymentData] = await Promise.all([
       getProperty(id),
       getTenantsByProperty(id),
-      getPaymentsForPropertyMonth(id, currentPeriodMonth()),
+      getPaymentsForProperty(id),
     ]);
     setProperty(propertyData);
     setTenants(tenantData);
-    setPayments(paymentData);
+    // One row per tenant: their current rent cycle.
+    setPayments(latestPerTenant(paymentData));
     setLoading(false);
   }
 
@@ -102,9 +104,7 @@ export default function PropertyDetailPage() {
 
       <div className="flex flex-col gap-3.5 p-5">
         <div className="rounded-2xl border border-gray-100 p-4 shadow-sm">
-          <div className="mb-1 text-[11px] font-semibold text-gray-500">
-            {new Date().toLocaleDateString("en-IN", { month: "long" }).toUpperCase()} RENT
-          </div>
+          <div className="mb-1 text-[11px] font-semibold text-gray-500">CURRENT RENT CYCLE</div>
           <div className="mb-2.5 flex items-end justify-between">
             <div className="font-heading text-2xl font-extrabold text-emerald-600">{formatCurrency(collected)}</div>
             <div className="text-xs text-gray-500">of {formatCurrency(collected + due)}</div>

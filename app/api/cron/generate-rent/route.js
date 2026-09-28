@@ -1,10 +1,18 @@
 import { NextResponse } from "next/server";
 import { getSupabaseServiceClient } from "@/lib/supabaseServer";
-import { currentPeriodMonth } from "@/lib/dueDate";
+import { firstDueDate, nextDueDate, todayIso } from "@/lib/dueDate";
 
-// Called once a day by Vercel Cron (see vercel.json). Idempotent: running it
-// twice in the same month just no-ops on the second run thanks to the
-// (tenant_id, period_month) unique constraint.
+// Called once a day by Vercel Cron (see vercel.json). Each tenant's rent
+// cycles are independent (due 30 days after move-in, then every 30 days
+// after that), so this walks each active tenant's own payment history
+// rather than generating one shared record for everyone.
+//
+// For a tenant with no payments yet, it creates their first cycle
+// (move_in_date + 30). For a tenant whose latest cycle's due date has
+// already arrived, it creates the next one (that due date + 30) — one
+// cycle per run, so if the app hasn't been checked in a while, running
+// daily naturally catches up one missed cycle per day rather than trying
+// to backfill everything at once.
 export async function GET(request) {
   const authHeader = request.headers.get("authorization");
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
@@ -12,36 +20,57 @@ export async function GET(request) {
   }
 
   const supabase = getSupabaseServiceClient();
-  const periodMonth = currentPeriodMonth();
+  const today = todayIso();
 
   const { data: tenants, error: tenantsError } = await supabase
     .from("tenants")
-    .select("id, user_id, property_id, monthly_rent")
+    .select("id, user_id, property_id, monthly_rent, move_in_date")
     .eq("status", "active");
 
   if (tenantsError) {
     return NextResponse.json({ error: tenantsError.message }, { status: 500 });
   }
 
-  if (!tenants.length) {
-    return NextResponse.json({ created: 0 });
+  let created = 0;
+  const errors = [];
+
+  for (const tenant of tenants) {
+    const { data: latest, error: latestError } = await supabase
+      .from("payments")
+      .select("due_date")
+      .eq("tenant_id", tenant.id)
+      .order("due_date", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (latestError) {
+      errors.push({ tenant_id: tenant.id, error: latestError.message });
+      continue;
+    }
+
+    const dueDate = latest ? nextDueDate(latest.due_date) : firstDueDate(tenant.move_in_date);
+
+    // Only create the next cycle once its due date has actually arrived —
+    // don't generate cycles ahead of time.
+    if (latest && dueDate > today) continue;
+
+    const { error: insertError } = await supabase.from("payments").upsert(
+      {
+        user_id: tenant.user_id,
+        tenant_id: tenant.id,
+        property_id: tenant.property_id,
+        due_date: dueDate,
+        amount_due: tenant.monthly_rent,
+      },
+      { onConflict: "tenant_id,due_date", ignoreDuplicates: true }
+    );
+
+    if (insertError) {
+      errors.push({ tenant_id: tenant.id, error: insertError.message });
+    } else {
+      created += 1;
+    }
   }
 
-  const rows = tenants.map((t) => ({
-    user_id: t.user_id,
-    tenant_id: t.id,
-    property_id: t.property_id,
-    period_month: periodMonth,
-    amount_due: t.monthly_rent,
-  }));
-
-  const { error: upsertError, count } = await supabase
-    .from("payments")
-    .upsert(rows, { onConflict: "tenant_id,period_month", ignoreDuplicates: true, count: "exact" });
-
-  if (upsertError) {
-    return NextResponse.json({ error: upsertError.message }, { status: 500 });
-  }
-
-  return NextResponse.json({ attempted: rows.length, created: count ?? null });
+  return NextResponse.json({ tenants: tenants.length, created, errors });
 }

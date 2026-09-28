@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getProfile, getUnpaidPayments } from "@/lib/queries";
+import { getProfile, getUnpaidPayments, oldestUnpaidPerTenant } from "@/lib/queries";
 import { daysOverdue, formatCurrency, formatDate, paymentStatus } from "@/lib/dueDate";
 import { buildWhatsAppReminderUrl } from "@/lib/whatsapp";
 import GradientHeader from "@/components/GradientHeader";
@@ -19,9 +19,11 @@ export default function AtRiskPage() {
     });
   }, []);
 
-  const overdue = unpaid.filter((p) => paymentStatus(p) === "overdue");
-  const critical = overdue.filter((p) => daysOverdue(p) >= 50).sort((a, b) => daysOverdue(b) - daysOverdue(a));
-  const medium = overdue.filter((p) => daysOverdue(p) < 50).sort((a, b) => daysOverdue(b) - daysOverdue(a));
+  // Collapse a tenant's multiple missed cycles down to their oldest (worst)
+  // one, so they appear once at their true severity.
+  const overdue = oldestUnpaidPerTenant(unpaid.filter((p) => paymentStatus(p) === "overdue"));
+  const critical = overdue.filter((p) => daysOverdue(p) >= 16).sort((a, b) => daysOverdue(b) - daysOverdue(a));
+  const medium = overdue.filter((p) => daysOverdue(p) < 16).sort((a, b) => daysOverdue(b) - daysOverdue(a));
 
   function remindUrl(payment) {
     return buildWhatsAppReminderUrl({
@@ -44,10 +46,10 @@ export default function AtRiskPage() {
         ) : (
           <>
             {critical.length > 0 ? (
-              <RiskGroup title="🔴 Critical (50+ days overdue)" items={critical} remindUrl={remindUrl} tier="critical" />
+              <RiskGroup title="🔴 Critical (16-30+ days overdue)" items={critical} remindUrl={remindUrl} tier="critical" />
             ) : null}
             {medium.length > 0 ? (
-              <RiskGroup title="🟡 Medium (1-49 days overdue)" items={medium} remindUrl={remindUrl} tier="medium" />
+              <RiskGroup title="🟡 Medium (1-15 days overdue)" items={medium} remindUrl={remindUrl} tier="medium" />
             ) : null}
           </>
         )}
@@ -89,7 +91,7 @@ function RiskGroup({ title, items, remindUrl, tier }) {
               </span>
             </div>
             <div className="mb-2.5 text-xs text-gray-600">
-              Due {formatDate(p.period_month)} • {formatCurrency(p.amount_due)} pending
+              Due {formatDate(p.due_date)} • {formatCurrency(p.amount_due)} pending
             </div>
             {p.tenant?.phone ? (
               tier === "critical" ? (
