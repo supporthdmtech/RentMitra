@@ -21,8 +21,9 @@ from another's. The only server route is the monthly rent-generation cron.
 1. Go to [supabase.com](https://supabase.com), create a free project.
 2. Open the **SQL Editor** and run, in order:
    [`supabase/migrations/0001_init.sql`](supabase/migrations/0001_init.sql),
-   [`supabase/migrations/0002_google_auth.sql`](supabase/migrations/0002_google_auth.sql), then
-   [`supabase/migrations/0003_move_in_anchored_due_dates.sql`](supabase/migrations/0003_move_in_anchored_due_dates.sql).
+   [`supabase/migrations/0002_google_auth.sql`](supabase/migrations/0002_google_auth.sql),
+   [`supabase/migrations/0003_move_in_anchored_due_dates.sql`](supabase/migrations/0003_move_in_anchored_due_dates.sql), then
+   [`supabase/migrations/0004_tenant_billing_start_date.sql`](supabase/migrations/0004_tenant_billing_start_date.sql).
 3. Go to **Project Settings → API** and copy:
    - `Project URL` → `NEXT_PUBLIC_SUPABASE_URL`
    - `anon public` key → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
@@ -98,6 +99,12 @@ tied to the calendar month. Overdue counting starts immediately once a due date 
 (no grace period), and At-Risk severity is: **Medium** = 1–15 days overdue, **Critical** =
 16+ days overdue. A daily cron job ([app/api/cron/generate-rent/route.js](app/api/cron/generate-rent/route.js))
 creates each tenant's next cycle once their current one's due date arrives.
+
+An owner can override a tenant's cycle anchor with a **Billing Start Date** (set from the
+Tenant Payment History page) — useful after a mid-month move-in with a partial first
+payment, where the regular cycle should start from, say, the 1st of the next month instead
+of 30 days after the actual move-in date. If set, it replaces `move_in_date` as the anchor
+for all future due dates; the tenant's current unpaid cycle is realigned immediately.
 
 ## Known V1 scope cuts (see project plan for the full reasoning)
 

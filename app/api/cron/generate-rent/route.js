@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSupabaseServiceClient } from "@/lib/supabaseServer";
-import { firstDueDate, nextDueDate, todayIso } from "@/lib/dueDate";
+import { billingAnchor, firstDueDate, nextDueDate, todayIso } from "@/lib/dueDate";
 
 // Called once a day by Vercel Cron (see vercel.json). Each tenant's rent
 // cycles are independent (due 30 days after move-in, then every 30 days
@@ -24,7 +24,7 @@ export async function GET(request) {
 
   const { data: tenants, error: tenantsError } = await supabase
     .from("tenants")
-    .select("id, user_id, property_id, monthly_rent, move_in_date")
+    .select("id, user_id, property_id, monthly_rent, move_in_date, billing_start_date")
     .eq("status", "active");
 
   if (tenantsError) {
@@ -48,7 +48,7 @@ export async function GET(request) {
       continue;
     }
 
-    const dueDate = latest ? nextDueDate(latest.due_date) : firstDueDate(tenant.move_in_date);
+    const dueDate = latest ? nextDueDate(latest.due_date) : firstDueDate(billingAnchor(tenant));
 
     // Only create the next cycle once its due date has actually arrived —
     // don't generate cycles ahead of time.

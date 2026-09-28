@@ -9,6 +9,7 @@ import {
   markPaymentPaid,
   moveOutTenant,
   undoPaymentPaid,
+  updateTenant,
 } from "@/lib/queries";
 import { formatCurrency, formatDate } from "@/lib/dueDate";
 import { buildWhatsAppReminderUrl } from "@/lib/whatsapp";
@@ -22,6 +23,7 @@ export default function TenantPaymentHistoryPage() {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [confirmMoveOut, setConfirmMoveOut] = useState(false);
+  const [editingBillingDate, setEditingBillingDate] = useState(false);
 
   useEffect(() => {
     load();
@@ -67,6 +69,14 @@ export default function TenantPaymentHistoryPage() {
     setConfirmMoveOut(false);
   }
 
+  async function handleBillingStartDateChange(value) {
+    await updateTenant(id, { billing_start_date: value || null });
+    setEditingBillingDate(false);
+    // The tenant's current cycle may have just been realigned to a new due
+    // date, so reload payments rather than patching state by hand.
+    await load();
+  }
+
   if (loading) return <p className="p-6 text-sm text-gray-500">Loading…</p>;
 
   const totalPaid = payments.filter((p) => p.paid_at).reduce((s, p) => s + Number(p.amount_due), 0);
@@ -90,6 +100,58 @@ export default function TenantPaymentHistoryPage() {
             <div className="text-[11px] font-semibold text-gray-500">Total collected</div>
             <div className="font-heading text-lg font-bold text-emerald-600">{formatCurrency(totalPaid)}</div>
           </div>
+        </div>
+
+        <div className="mb-5 rounded-xl border border-gray-100 p-4">
+          <div className="mb-2 flex items-center justify-between">
+            <div className="text-[11px] font-semibold text-gray-500">Rent cycle start</div>
+            <button
+              onClick={() => setEditingBillingDate((v) => !v)}
+              className="text-[11px] font-bold text-blue-600"
+            >
+              {tenant.billing_start_date ? "Edit" : "Override"}
+            </button>
+          </div>
+          {editingBillingDate ? (
+            <div>
+              <input
+                type="date"
+                defaultValue={tenant.billing_start_date || ""}
+                onChange={(e) => handleBillingStartDateChange(e.target.value)}
+                className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
+              />
+              <p className="mt-2 text-[11px] leading-relaxed text-gray-400">
+                Leave blank to use the default (move-in date + 30 days). Setting a date here
+                overrides that — useful after a partial first payment, so the regular cycle can
+                start from, say, the 1st of next month instead.
+                {tenant.billing_start_date ? (
+                  <>
+                    {" "}
+                    <button
+                      onClick={() => handleBillingStartDateChange(null)}
+                      className="font-semibold text-red-500 underline"
+                    >
+                      Clear override
+                    </button>
+                  </>
+                ) : null}
+              </p>
+            </div>
+          ) : (
+            <div className="text-sm font-bold">
+              {tenant.billing_start_date ? (
+                <>
+                  {formatDate(tenant.billing_start_date)}{" "}
+                  <span className="font-normal text-gray-400">(custom override)</span>
+                </>
+              ) : (
+                <>
+                  {formatDate(tenant.move_in_date)}{" "}
+                  <span className="font-normal text-gray-400">(default: move-in date)</span>
+                </>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="mb-5 flex flex-col gap-3">
