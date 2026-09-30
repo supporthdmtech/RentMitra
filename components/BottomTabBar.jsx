@@ -7,7 +7,7 @@ const TABS = [
   { href: "/dashboard", label: "Home", icon: "🏠" },
   { href: "/payments", label: "Payments", icon: "💳" },
   { href: "/reports", label: "Reports", icon: "📊" },
-  { href: "/alerts", label: "Alerts", icon: "🔔" },
+  { href: "/profile", label: "Settings", icon: "⚙️" },
 ];
 
 export default function BottomTabBar() {

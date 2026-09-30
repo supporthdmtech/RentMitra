@@ -22,8 +22,9 @@ from another's. The only server route is the monthly rent-generation cron.
 2. Open the **SQL Editor** and run, in order:
    [`supabase/migrations/0001_init.sql`](supabase/migrations/0001_init.sql),
    [`supabase/migrations/0002_google_auth.sql`](supabase/migrations/0002_google_auth.sql),
-   [`supabase/migrations/0003_move_in_anchored_due_dates.sql`](supabase/migrations/0003_move_in_anchored_due_dates.sql), then
-   [`supabase/migrations/0004_tenant_billing_start_date.sql`](supabase/migrations/0004_tenant_billing_start_date.sql).
+   [`supabase/migrations/0003_move_in_anchored_due_dates.sql`](supabase/migrations/0003_move_in_anchored_due_dates.sql),
+   [`supabase/migrations/0004_tenant_billing_start_date.sql`](supabase/migrations/0004_tenant_billing_start_date.sql), then
+   [`supabase/migrations/0005_rooms_beds_billing_mode.sql`](supabase/migrations/0005_rooms_beds_billing_mode.sql).
 3. Go to **Project Settings → API** and copy:
    - `Project URL` → `NEXT_PUBLIC_SUPABASE_URL`
    - `anon public` key → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
@@ -106,8 +107,46 @@ payment, where the regular cycle should start from, say, the 1st of the next mon
 of 30 days after the actual move-in date. If set, it replaces `move_in_date` as the anchor
 for all future due dates; the tenant's current unpaid cycle is realigned immediately.
 
+## Property types & billing
+
+Three property types: **Rental** (no rooms/beds concept — a fixed number of units, one
+tenant per unit, free-text room field, unchanged from V1), **PG** (owner chooses **bed-wise**
+or **room-wise** billing at creation, locked once rooms exist), and **Hostel** (always
+bed-wise). PG/Hostel properties have real `rooms` and `beds` records
+([lib/rooms.js](lib/rooms.js)) — created via **Manage Rooms**
+([app/properties/[id]/rooms/page.jsx](<app/properties/[id]/rooms/page.jsx>)) before tenants
+can be added — so a bed shows as vacant even before anyone's ever been assigned to it.
+Room-wise billing is one tenant record per room (no per-occupant tracking, matching how the
+rest of the app already treats tenants).
+
+## Rent due dates
+
+Each tenant's rent cycle is independent: the first payment is due **30 days after their
+move-in date**, and every cycle after that is another 30 days on from the last one — not
+tied to the calendar month. Overdue counting starts immediately once a due date passes
+(no grace period), and At-Risk severity is: **Medium** = 1–15 days overdue, **Critical** =
+16+ days overdue. A daily cron job ([app/api/cron/generate-rent/route.js](app/api/cron/generate-rent/route.js))
+creates each tenant's next cycle once their current one's due date arrives.
+
+An owner can override a tenant's cycle anchor with a **Billing Start Date** (set from the
+Tenant Payment History page) — useful after a mid-month move-in with a partial first
+payment, where the regular cycle should start from, say, the 1st of the next month instead
+of 30 days after the actual move-in date. If set, it replaces `move_in_date` as the anchor
+for all future due dates; the tenant's current unpaid cycle is realigned immediately.
+
+## Navigation & performance
+
+Bottom tabs: **Home / Payments / Reports / Settings**. There's no separate Alerts tab —
+overdue/pending are already visible on the Payments tab (with a banner linking to the
+At-Risk breakdown when anything's overdue), so a dedicated Alerts screen was redundant.
+Settings is the existing Profile screen.
+
+Each tab's data is cached in memory for the session ([lib/useCachedQuery.js](lib/useCachedQuery.js)) —
+revisiting a tab you've already seen renders instantly from cache while quietly refetching
+in the background, instead of blocking on a fresh "Loading…" every time.
+
 ## Known V1 scope cuts (see project plan for the full reasoning)
 
 - Reminders open a pre-filled WhatsApp (`wa.me`) link — the owner still presses Send. No WhatsApp Business API.
 - No online rent collection — payments are marked paid manually; UPI ID is just displayed for tenants to pay externally.
-- No real push notifications yet — the Alerts tab computes everything live from due dates, which covers the same information.
+- No real push notifications — the Payments/At-Risk tabs compute everything live from due dates, which covers the same information.

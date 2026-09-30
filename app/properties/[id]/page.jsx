@@ -6,11 +6,13 @@ import Link from "next/link";
 import {
   getPaymentsForProperty,
   getProperty,
+  getRoomsForProperty,
   getTenantsByProperty,
   latestPerTenant,
   softDeleteProperty,
 } from "@/lib/queries";
 import { formatCurrency, paymentStatus } from "@/lib/dueDate";
+import { effectiveBillingMode, occupancyFor, roomBreakdown } from "@/lib/rooms";
 import StatusPill from "@/components/StatusPill";
 
 export default function PropertyDetailPage() {
@@ -18,6 +20,7 @@ export default function PropertyDetailPage() {
   const router = useRouter();
   const [property, setProperty] = useState(null);
   const [tenants, setTenants] = useState([]);
+  const [rooms, setRooms] = useState([]);
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [confirmDelete, setConfirmDelete] = useState(0); // 0 = none, 1 = first confirm, 2 = second (has tenants)
@@ -27,13 +30,15 @@ export default function PropertyDetailPage() {
   }, [id]);
 
   async function load() {
-    const [propertyData, tenantData, paymentData] = await Promise.all([
+    const [propertyData, tenantData, paymentData, roomData] = await Promise.all([
       getProperty(id),
       getTenantsByProperty(id),
       getPaymentsForProperty(id),
+      getRoomsForProperty(id),
     ]);
     setProperty(propertyData);
     setTenants(tenantData);
+    setRooms(roomData);
     // One row per tenant: their current rent cycle.
     setPayments(latestPerTenant(paymentData));
     setLoading(false);
@@ -56,7 +61,10 @@ export default function PropertyDetailPage() {
 
   const collected = payments.filter((p) => paymentStatus(p) === "paid").reduce((s, p) => s + Number(p.amount_due), 0);
   const due = payments.reduce((s, p) => s + Number(p.amount_due), 0) - collected;
-  const occupiedPct = property.total_units ? Math.round((tenants.length / property.total_units) * 100) : 0;
+  const mode = effectiveBillingMode(property);
+  const occupancy = occupancyFor(property, { rooms, tenants });
+  const occupiedPct = occupancy.total ? Math.round((occupancy.occupied / occupancy.total) * 100) : 0;
+  const breakdown = roomBreakdown(property, { rooms, tenants });
 
   return (
     <div className="mx-auto min-h-screen max-w-md bg-white">
@@ -74,9 +82,16 @@ export default function PropertyDetailPage() {
             </button>
           </div>
         </div>
-        <span className="mb-2 inline-block rounded-full bg-white/25 px-2.5 py-0.5 text-[10px] font-bold">
-          {property.type === "pg" ? "PG" : "RENTAL"}
-        </span>
+        <div className="mb-2 flex gap-1.5">
+          <span className="inline-block rounded-full bg-white/25 px-2.5 py-0.5 text-[10px] font-bold">
+            {property.type.toUpperCase()}
+          </span>
+          {mode ? (
+            <span className="inline-block rounded-full bg-white/25 px-2.5 py-0.5 text-[10px] font-bold">
+              {mode === "bed" ? "BED-WISE" : "ROOM-WISE"}
+            </span>
+          ) : null}
+        </div>
         <div className="font-heading text-xl font-bold">{property.name}</div>
         <div className="mt-0.5 text-xs opacity-90">📍 {property.address}</div>
       </div>
@@ -125,12 +140,37 @@ export default function PropertyDetailPage() {
           <div className="mb-2 flex justify-between text-xs font-bold">
             <span>Occupancy</span>
             <span className="text-orange-500">
-              {tenants.length} of {property.total_units} {property.type === "pg" ? "rooms" : "units"} · {occupiedPct}%
+              {occupancy.occupied} of {occupancy.total} {mode === "bed" ? "beds" : mode === "room" ? "rooms" : "units"} ·{" "}
+              {occupiedPct}%
             </span>
           </div>
           <div className="h-2 overflow-hidden rounded-full bg-orange-100">
             <div className="h-full bg-gradient-to-r from-orange-500 to-pink-500" style={{ width: `${occupiedPct}%` }} />
           </div>
+
+          {mode ? (
+            <>
+              <div className="mt-3 flex flex-col gap-1.5">
+                {breakdown.map(({ room, beds, tenant }) => (
+                  <div key={room.id} className="flex items-center justify-between text-[11px]">
+                    <span className="text-gray-500">Room {room.room_no}</span>
+                    {mode === "bed" ? (
+                      <span className="font-semibold">
+                        {beds.filter((b) => b.tenant).length}/{beds.length} beds
+                      </span>
+                    ) : (
+                      <span className={`font-semibold ${tenant ? "text-red-500" : "text-green-600"}`}>
+                        {tenant ? "Occupied" : "Vacant"}
+                      </span>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <Link href={`/properties/${id}/rooms`} className="mt-3 block text-[11px] font-bold text-blue-600">
+                Manage Rooms →
+              </Link>
+            </>
+          ) : null}
         </div>
 
         <div className="mt-1 flex items-center justify-between">
@@ -157,7 +197,10 @@ export default function PropertyDetailPage() {
                   </div>
                   <div className="flex-1">
                     <div className="text-sm font-bold">{tenant.name}</div>
-                    <div className="text-[11px] text-gray-500">Room {tenant.room_no}</div>
+                    <div className="text-[11px] text-gray-500">
+                      Room {tenant.room_no}
+                      {tenant.bed_id ? ` • Bed ${bedLabelFor(rooms, tenant.bed_id)}` : ""}
+                    </div>
                   </div>
                   <div className="text-right">
                     <div className="text-sm font-bold">{formatCurrency(tenant.monthly_rent)}</div>
@@ -171,4 +214,12 @@ export default function PropertyDetailPage() {
       </div>
     </div>
   );
+}
+
+function bedLabelFor(rooms, bedId) {
+  for (const room of rooms) {
+    const bed = (room.beds || []).find((b) => b.id === bedId);
+    if (bed) return bed.label;
+  }
+  return null;
 }

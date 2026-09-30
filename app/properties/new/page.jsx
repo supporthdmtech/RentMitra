@@ -18,6 +18,7 @@ function AddPropertyForm() {
   const [error, setError] = useState("");
   const [form, setForm] = useState({
     type: "rental",
+    billing_mode: "room",
     name: "",
     total_rent: "",
     address: "",
@@ -29,6 +30,7 @@ function AddPropertyForm() {
     getProperty(editId).then((p) => {
       setForm({
         type: p.type,
+        billing_mode: p.billing_mode || "room",
         name: p.name,
         total_rent: String(p.total_rent),
         address: p.address,
@@ -38,7 +40,12 @@ function AddPropertyForm() {
     });
   }, [editId, isEdit]);
 
-  const step1Valid = form.name.trim() && form.total_rent && form.address.trim() && Number(form.total_units) > 0;
+  const isRental = form.type === "rental";
+  const step1Valid =
+    form.name.trim() &&
+    form.total_rent &&
+    form.address.trim() &&
+    (!isRental || Number(form.total_units) > 0);
 
   async function handleSave() {
     setSaving(true);
@@ -48,7 +55,8 @@ function AddPropertyForm() {
       name: form.name.trim(),
       address: form.address.trim(),
       total_rent: Number(form.total_rent),
-      total_units: Number(form.total_units),
+      total_units: isRental ? Number(form.total_units) : 1,
+      billing_mode: form.type === "pg" ? form.billing_mode : form.type === "hostel" ? "bed" : null,
     };
     try {
       if (isEdit) {
@@ -56,7 +64,9 @@ function AddPropertyForm() {
         router.push(`/properties/${editId}`);
       } else {
         const property = await createProperty(payload);
-        router.push(`/properties/${property.id}`);
+        // PG/Hostel need rooms (and beds, if bed-wise) set up before a
+        // tenant can be added — send the owner there first.
+        router.push(isRental ? `/properties/${property.id}` : `/properties/${property.id}/rooms`);
       }
     } catch (e) {
       setError(e.message);
@@ -80,7 +90,7 @@ function AddPropertyForm() {
           <>
             <div className="mb-6">
               <div className="font-heading mb-3 text-[13px] font-bold">What type of property?</div>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-3 gap-2.5">
                 <TypeButton
                   active={form.type === "rental"}
                   onClick={() => setForm((f) => ({ ...f, type: "rental", total_units: "1" }))}
@@ -93,13 +103,53 @@ function AddPropertyForm() {
                   onClick={() => setForm((f) => ({ ...f, type: "pg" }))}
                   disabled={isEdit}
                   emoji="🏢"
-                  label="PG/Hostel"
+                  label="PG"
+                />
+                <TypeButton
+                  active={form.type === "hostel"}
+                  onClick={() => setForm((f) => ({ ...f, type: "hostel" }))}
+                  disabled={isEdit}
+                  emoji="🏫"
+                  label="Hostel"
                 />
               </div>
               {isEdit ? (
                 <p className="mt-2 text-[11px] text-gray-400">Property type can&apos;t be changed once tenants exist.</p>
               ) : null}
             </div>
+
+            {form.type === "pg" ? (
+              <div className="mb-6">
+                <div className="font-heading mb-3 text-[13px] font-bold">How is it billed?</div>
+                <div className="grid grid-cols-2 gap-3">
+                  <TypeButton
+                    active={form.billing_mode === "bed"}
+                    onClick={() => setForm((f) => ({ ...f, billing_mode: "bed" }))}
+                    disabled={isEdit}
+                    emoji="🛏️"
+                    label="Bed-wise"
+                  />
+                  <TypeButton
+                    active={form.billing_mode === "room"}
+                    onClick={() => setForm((f) => ({ ...f, billing_mode: "room" }))}
+                    disabled={isEdit}
+                    emoji="🚪"
+                    label="Room-wise"
+                  />
+                </div>
+                <p className="mt-2 text-[11px] text-gray-400">
+                  Bed-wise: each bed in a shared room is billed separately. Room-wise: a private
+                  room is billed as one unit (e.g. two friends splitting one room).
+                  {isEdit ? " Can't be changed once rooms exist." : ""}
+                </p>
+              </div>
+            ) : null}
+
+            {form.type === "hostel" ? (
+              <p className="mb-6 text-[11px] text-gray-400">
+                Hostels are always billed bed-wise — you&apos;ll add rooms and beds next.
+              </p>
+            ) : null}
 
             <Field label="Property Name *">
               <input
@@ -120,15 +170,17 @@ function AddPropertyForm() {
               />
             </Field>
 
-            <Field label={form.type === "pg" ? "Number of Rooms *" : "Number of Units *"}>
-              <input
-                type="number"
-                min={1}
-                value={form.total_units}
-                onChange={(e) => setForm((f) => ({ ...f, total_units: e.target.value }))}
-                className="w-full rounded-lg border-[1.5px] border-gray-200 px-3.5 py-3 text-sm"
-              />
-            </Field>
+            {isRental ? (
+              <Field label="Number of Units *">
+                <input
+                  type="number"
+                  min={1}
+                  value={form.total_units}
+                  onChange={(e) => setForm((f) => ({ ...f, total_units: e.target.value }))}
+                  className="w-full rounded-lg border-[1.5px] border-gray-200 px-3.5 py-3 text-sm"
+                />
+              </Field>
+            ) : null}
 
             <Field label="Address *">
               <input
@@ -150,10 +202,16 @@ function AddPropertyForm() {
         ) : (
           <>
             <div className="mb-6 rounded-xl border border-gray-100 p-4">
-              <SummaryRow label="Type" value={form.type === "pg" ? "PG / Hostel" : "Rental"} />
+              <SummaryRow
+                label="Type"
+                value={form.type === "rental" ? "Rental" : form.type === "pg" ? "PG" : "Hostel"}
+              />
+              {form.type === "pg" ? (
+                <SummaryRow label="Billing" value={form.billing_mode === "bed" ? "Bed-wise" : "Room-wise"} />
+              ) : null}
               <SummaryRow label="Name" value={form.name} />
               <SummaryRow label="Total rent" value={formatCurrency(Number(form.total_rent))} />
-              <SummaryRow label={form.type === "pg" ? "Rooms" : "Units"} value={form.total_units} />
+              {isRental ? <SummaryRow label="Units" value={form.total_units} /> : null}
               <SummaryRow label="Address" value={form.address} last />
             </div>
 

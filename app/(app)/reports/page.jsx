@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { getActiveProperties, getPaymentsInRange } from "@/lib/queries";
 import { addDays, formatCurrency, formatDate, paymentStatus, todayIso } from "@/lib/dueDate";
 import { downloadIncomeReportPdf } from "@/lib/reportPdf";
 import { downloadCsv } from "@/lib/csv";
+import { useCachedQuery } from "@/lib/useCachedQuery";
 
 function last30DaysRange() {
   const to = todayIso();
@@ -16,23 +17,15 @@ export default function ReportsPage() {
   const [mode, setMode] = useState("recent"); // "recent" | "range"
   const [from, setFrom] = useState(defaultRange.from);
   const [to, setTo] = useState(defaultRange.to);
-  const [properties, setProperties] = useState([]);
-  const [payments, setPayments] = useState([]);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    getActiveProperties().then(setProperties);
-  }, []);
+  const { data: properties } = useCachedQuery("reports-properties", getActiveProperties);
+  const { data: payments, loading } = useCachedQuery(
+    `reports-payments:${from}:${to}`,
+    () => getPaymentsInRange(from, to),
+    [from, to]
+  );
 
-  useEffect(() => {
-    setLoading(true);
-    getPaymentsInRange(from, to).then((data) => {
-      setPayments(data);
-      setLoading(false);
-    });
-  }, [from, to]);
-
-  const totals = payments.reduce(
+  const totals = (payments || []).reduce(
     (acc, p) => {
       const status = paymentStatus(p);
       acc[status] += Number(p.amount_due);
@@ -41,9 +34,9 @@ export default function ReportsPage() {
     { paid: 0, pending: 0, overdue: 0 }
   );
 
-  const byProperty = properties
+  const byProperty = (properties || [])
     .map((property) => {
-      const rows = payments.filter((p) => p.property_id === property.id);
+      const rows = (payments || []).filter((p) => p.property_id === property.id);
       const tenantIds = new Set(rows.map((r) => r.tenant_id));
       return {
         id: property.id,
@@ -65,7 +58,7 @@ export default function ReportsPage() {
   function handleDownloadCsv() {
     downloadCsv(
       `rentmitra-payments-${from}-to-${to}.csv`,
-      payments.map((p) => ({
+      (payments || []).map((p) => ({
         property: p.property?.name,
         tenant: p.tenant?.name,
         due_date: p.due_date,

@@ -1,42 +1,38 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   getActiveProperties,
   getAllActiveTenants,
   getAllPaymentsForOwner,
+  getAllRooms,
   getProfile,
   latestPerTenant,
 } from "@/lib/queries";
 import { formatCurrency, paymentStatus } from "@/lib/dueDate";
+import { occupancyFor } from "@/lib/rooms";
+import { useCachedQuery } from "@/lib/useCachedQuery";
+
+const TYPE_LABEL = { rental: "RENTAL", pg: "PG", hostel: "HOSTEL" };
+
+async function loadDashboard() {
+  const [profile, properties, tenants, allPayments, rooms] = await Promise.all([
+    getProfile(),
+    getActiveProperties(),
+    getAllActiveTenants(),
+    getAllPaymentsForOwner(),
+    getAllRooms(),
+  ]);
+  // Each tenant's current rent cycle, not a shared calendar month.
+  return { profile, properties, tenants, rooms, payments: latestPerTenant(allPayments) };
+}
 
 export default function DashboardPage() {
-  const [loading, setLoading] = useState(true);
-  const [profile, setProfile] = useState(null);
-  const [properties, setProperties] = useState([]);
-  const [tenants, setTenants] = useState([]);
-  const [payments, setPayments] = useState([]);
+  const { data, loading } = useCachedQuery("dashboard", loadDashboard);
 
-  useEffect(() => {
-    async function load() {
-      const [profileData, propertyData, tenantData, paymentData] = await Promise.all([
-        getProfile(),
-        getActiveProperties(),
-        getAllActiveTenants(),
-        getAllPaymentsForOwner(),
-      ]);
-      setProfile(profileData);
-      setProperties(propertyData);
-      setTenants(tenantData);
-      // Each tenant's current rent cycle, not a shared calendar month.
-      setPayments(latestPerTenant(paymentData));
-      setLoading(false);
-    }
-    load();
-  }, []);
+  if (!data) return <CenteredMessage>Loading…</CenteredMessage>;
 
-  if (loading) return <CenteredMessage>Loading…</CenteredMessage>;
+  const { profile, properties, tenants, rooms, payments } = data;
 
   const paid = payments.filter((p) => paymentStatus(p) === "paid");
   const pending = payments.filter((p) => paymentStatus(p) === "pending");
@@ -44,20 +40,12 @@ export default function DashboardPage() {
   const totalIncome = paid.reduce((sum, p) => sum + Number(p.amount_due), 0);
 
   return (
-    <div>
+    <div className={loading ? "opacity-90" : ""}>
       <div className="bg-gradient-to-br from-blue-600 to-blue-800 px-5 pb-5 pt-6 text-white">
-        <div className="mb-5 flex items-start justify-between">
-          <div>
-            <div className="font-heading text-xl font-bold">
-              Welcome, {profile?.full_name || "Owner"}
-            </div>
+        <div className="mb-5">
+          <div className="font-heading text-xl font-bold">
+            Welcome, {profile?.full_name || "Owner"}
           </div>
-          <Link
-            href="/profile"
-            className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20 text-xl"
-          >
-            👤
-          </Link>
         </div>
 
         <div className="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur">
@@ -94,18 +82,17 @@ export default function DashboardPage() {
         ) : (
           <div className="flex flex-col gap-3">
             {properties.map((property) => {
-              const propertyTenants = tenants.filter((t) => t.property_id === property.id);
               const propertyPayments = payments.filter((p) => p.property_id === property.id);
               const paidCount = propertyPayments.filter((p) => paymentStatus(p) === "paid").length;
-              const total = propertyTenants.length;
+              const total = propertyPayments.length;
               const pct = total ? Math.round((paidCount / total) * 100) : 0;
               const collected = propertyPayments
                 .filter((p) => paymentStatus(p) === "paid")
                 .reduce((s, p) => s + Number(p.amount_due), 0);
               const totalDue = propertyPayments.reduce((s, p) => s + Number(p.amount_due), 0);
-              const occupiedPct = property.total_units
-                ? Math.round((total / property.total_units) * 100)
-                : 0;
+              const occupancy = occupancyFor(property, { rooms, tenants });
+              const occupiedPct = occupancy.total ? Math.round((occupancy.occupied / occupancy.total) * 100) : 0;
+              const unitLabel = occupancy.mode === "bed" ? "beds" : occupancy.mode === "room" ? "rooms" : "units";
 
               return (
                 <Link
@@ -117,13 +104,12 @@ export default function DashboardPage() {
                     <div>
                       <div className="mb-1 flex items-center gap-1.5">
                         <span className="rounded-full bg-white px-2 py-0.5 text-[9px] font-bold text-blue-600">
-                          {property.type === "pg" ? "PG" : "RENTAL"}
+                          {TYPE_LABEL[property.type]}
                         </span>
                       </div>
                       <div className="font-heading text-sm font-bold">{property.name}</div>
                       <div className="mt-0.5 text-xs text-gray-500">
-                        {property.address} • {total} of {property.total_units}{" "}
-                        {property.type === "pg" ? "rooms" : "units"} ({occupiedPct}%)
+                        {property.address} • {occupancy.occupied} of {occupancy.total} {unitLabel} ({occupiedPct}%)
                       </div>
                     </div>
                     <div className="text-right">

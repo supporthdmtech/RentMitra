@@ -1,14 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import Link from "next/link";
 import {
   getAllPaymentsForOwner,
   getProfile,
   markPaymentPaid,
+  oldestUnpaidPerTenant,
   undoPaymentPaid,
 } from "@/lib/queries";
 import { buildWhatsAppReminderUrl } from "@/lib/whatsapp";
-import { paymentStatus } from "@/lib/dueDate";
+import { daysOverdue, paymentStatus } from "@/lib/dueDate";
+import { useCachedQuery } from "@/lib/useCachedQuery";
 import PaymentCard from "@/components/PaymentCard";
 
 const FILTERS = [
@@ -18,30 +21,34 @@ const FILTERS = [
   { value: "paid", label: "Paid" },
 ];
 
+async function loadPayments() {
+  const [payments, profile] = await Promise.all([getAllPaymentsForOwner(), getProfile()]);
+  return { payments, profile };
+}
+
 export default function PaymentsPage() {
   const [filter, setFilter] = useState("all");
-  const [payments, setPayments] = useState([]);
-  const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { data, setData } = useCachedQuery("payments", loadPayments);
 
-  useEffect(() => {
-    Promise.all([getAllPaymentsForOwner(), getProfile()]).then(([paymentData, profileData]) => {
-      setPayments(paymentData);
-      setProfile(profileData);
-      setLoading(false);
-    });
-  }, []);
+  if (!data) return <p className="p-6 text-sm text-gray-500">Loading…</p>;
+  const { payments, profile } = data;
 
   async function handleMarkPaid(payment) {
     await markPaymentPaid(payment);
-    setPayments((prev) =>
-      prev.map((p) => (p.id === payment.id ? { ...p, paid_at: new Date().toISOString() } : p))
-    );
+    setData((prev) => ({
+      ...prev,
+      payments: prev.payments.map((p) =>
+        p.id === payment.id ? { ...p, paid_at: new Date().toISOString() } : p
+      ),
+    }));
   }
 
   async function handleUndo(payment) {
     await undoPaymentPaid(payment);
-    setPayments((prev) => prev.map((p) => (p.id === payment.id ? { ...p, paid_at: null } : p)));
+    setData((prev) => ({
+      ...prev,
+      payments: prev.payments.map((p) => (p.id === payment.id ? { ...p, paid_at: null } : p)),
+    }));
   }
 
   function handleRemind(payment) {
@@ -55,6 +62,8 @@ export default function PaymentsPage() {
   }
 
   const filtered = filter === "all" ? payments : payments.filter((p) => paymentStatus(p) === filter);
+  const overdue = oldestUnpaidPerTenant(payments.filter((p) => paymentStatus(p) === "overdue"));
+  const criticalCount = overdue.filter((p) => daysOverdue(p) >= 16).length;
 
   return (
     <div>
@@ -63,6 +72,17 @@ export default function PaymentsPage() {
       </div>
 
       <div className="p-5">
+        {overdue.length > 0 ? (
+          <Link
+            href="/at-risk"
+            className="mb-4 flex items-center justify-between rounded-lg border border-red-100 bg-red-50 px-3.5 py-3 text-xs"
+          >
+            <span className="font-semibold text-red-700">
+              {overdue.length} overdue{criticalCount > 0 ? ` — ${criticalCount} critical` : ""}
+            </span>
+            <span className="font-bold text-red-600">View At-Risk breakdown →</span>
+          </Link>
+        ) : null}
         <div className="mb-5 flex gap-2 overflow-x-auto pb-1">
           {FILTERS.map((f) => (
             <button
@@ -79,9 +99,7 @@ export default function PaymentsPage() {
           ))}
         </div>
 
-        {loading ? (
-          <p className="text-sm text-gray-500">Loading…</p>
-        ) : filtered.length === 0 ? (
+        {filtered.length === 0 ? (
           <p className="text-sm text-gray-500">No rent records here.</p>
         ) : (
           <div className="flex flex-col gap-3">

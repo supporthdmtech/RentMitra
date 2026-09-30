@@ -1,23 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { getProfile, getUnpaidPayments, oldestUnpaidPerTenant } from "@/lib/queries";
 import { daysOverdue, formatCurrency, formatDate, paymentStatus } from "@/lib/dueDate";
 import { buildWhatsAppReminderUrl } from "@/lib/whatsapp";
+import { useCachedQuery } from "@/lib/useCachedQuery";
 import GradientHeader from "@/components/GradientHeader";
 
-export default function AtRiskPage() {
-  const [unpaid, setUnpaid] = useState([]);
-  const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(true);
+async function loadAtRisk() {
+  const [unpaid, profile] = await Promise.all([getUnpaidPayments(), getProfile()]);
+  return { unpaid, profile };
+}
 
-  useEffect(() => {
-    Promise.all([getUnpaidPayments(), getProfile()]).then(([unpaidData, profileData]) => {
-      setUnpaid(unpaidData);
-      setProfile(profileData);
-      setLoading(false);
-    });
-  }, []);
+export default function AtRiskPage() {
+  const { data } = useCachedQuery("at-risk", loadAtRisk);
+  const unpaid = data?.unpaid || [];
+  const profile = data?.profile;
 
   // Collapse a tenant's multiple missed cycles down to their oldest (worst)
   // one, so they appear once at their true severity.
@@ -36,10 +33,10 @@ export default function AtRiskPage() {
 
   return (
     <div>
-      <GradientHeader title="At Risk Tenants" subtitle="Action required" gradient="red" backHref="/alerts" />
+      <GradientHeader title="At Risk Tenants" subtitle="Action required" gradient="red" backHref="/payments" />
 
       <div className="p-5">
-        {loading ? (
+        {!data ? (
           <p className="text-sm text-gray-500">Loading…</p>
         ) : overdue.length === 0 ? (
           <p className="text-sm text-gray-500">No overdue tenants right now.</p>
