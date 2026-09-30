@@ -99,6 +99,13 @@ export default function DashboardPage() {
               const paidCount = propertyPayments.filter((p) => paymentStatus(p) === "paid").length;
               const total = propertyTenants.length;
               const pct = total ? Math.round((paidCount / total) * 100) : 0;
+              const collected = propertyPayments
+                .filter((p) => paymentStatus(p) === "paid")
+                .reduce((s, p) => s + Number(p.amount_due), 0);
+              const totalDue = propertyPayments.reduce((s, p) => s + Number(p.amount_due), 0);
+              const occupiedPct = property.total_units
+                ? Math.round((total / property.total_units) * 100)
+                : 0;
 
               return (
                 <Link
@@ -108,13 +115,25 @@ export default function DashboardPage() {
                 >
                   <div className="mb-3 flex items-start justify-between">
                     <div>
+                      <div className="mb-1 flex items-center gap-1.5">
+                        <span className="rounded-full bg-white px-2 py-0.5 text-[9px] font-bold text-blue-600">
+                          {property.type === "pg" ? "PG" : "RENTAL"}
+                        </span>
+                      </div>
                       <div className="font-heading text-sm font-bold">{property.name}</div>
                       <div className="mt-0.5 text-xs text-gray-500">
-                        {property.address} • {total} tenant{total === 1 ? "" : "s"}
+                        {property.address} • {total} of {property.total_units}{" "}
+                        {property.type === "pg" ? "rooms" : "units"} ({occupiedPct}%)
                       </div>
                     </div>
-                    <div className="rounded-lg bg-white px-3 py-1.5 text-xs font-semibold text-blue-600">
-                      {paidCount}/{total} Paid
+                    <div className="text-right">
+                      <div className="rounded-lg bg-white px-3 py-1.5 text-xs font-semibold text-blue-600">
+                        {paidCount}/{total} Paid
+                      </div>
+                      <div className="mt-1 text-[11px] font-bold text-emerald-600">
+                        {formatCurrency(collected)}
+                        <span className="font-normal text-gray-400"> / {formatCurrency(totalDue)}</span>
+                      </div>
                     </div>
                   </div>
                   <div className="h-1.5 overflow-hidden rounded-full bg-blue-100">

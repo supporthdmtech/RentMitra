@@ -90,6 +90,7 @@ export default function PaymentsPage() {
                 key={payment.id}
                 payment={payment}
                 subtitle={payment.tenant?.name}
+                meta={payment.property?.name}
                 onMarkPaid={() => handleMarkPaid(payment)}
                 onUndo={() => handleUndo(payment)}
                 onRemind={payment.tenant?.phone ? () => handleRemind(payment) : undefined}

@@ -13,7 +13,7 @@ const ICON_STYLES = {
 const ICONS = { paid: "✓", pending: "⏱", overdue: "✕" };
 const AMOUNT_COLOR = { paid: "text-green-600", pending: "text-amber-600", overdue: "text-red-600" };
 
-export default function PaymentCard({ payment, subtitle, onMarkPaid, onUndo, onRemind }) {
+export default function PaymentCard({ payment, subtitle, meta, onMarkPaid, onUndo, onRemind }) {
   const status = paymentStatus(payment);
 
   return (
@@ -25,6 +25,7 @@ export default function PaymentCard({ payment, subtitle, onMarkPaid, onUndo, onR
           </div>
           <div>
             <div className="text-sm font-bold">{subtitle}</div>
+            {meta ? <div className="text-[11px] font-semibold text-gray-400">{meta}</div> : null}
             <div className="text-[11px] text-gray-500">
               {status === "paid"
                 ? `Paid ${formatDate(payment.paid_at)}`
