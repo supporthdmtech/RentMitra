@@ -24,6 +24,7 @@ export default function TenantPaymentHistoryPage() {
   const [loading, setLoading] = useState(true);
   const [confirmMoveOut, setConfirmMoveOut] = useState(false);
   const [editingBillingDate, setEditingBillingDate] = useState(false);
+  const [editingRent, setEditingRent] = useState(false);
 
   useEffect(() => {
     load();
@@ -77,6 +78,18 @@ export default function TenantPaymentHistoryPage() {
     await load();
   }
 
+  async function handleRentChange(value) {
+    const newRent = Number(value);
+    if (!newRent || newRent === Number(tenant.monthly_rent)) {
+      setEditingRent(false);
+      return;
+    }
+    await updateTenant(id, { monthly_rent: newRent });
+    setEditingRent(false);
+    // Any unpaid cycle(s) just got corrected to the new amount server-side.
+    await load();
+  }
+
   if (loading) return <p className="p-6 text-sm text-gray-500">Loading…</p>;
 
   const totalPaid = payments.filter((p) => p.paid_at).reduce((s, p) => s + Number(p.amount_due), 0);
@@ -93,14 +106,35 @@ export default function TenantPaymentHistoryPage() {
       <div className="p-5">
         <div className="mb-5 flex items-center justify-between rounded-xl border border-gray-100 p-4">
           <div>
-            <div className="text-[11px] font-semibold text-gray-500">Monthly rent</div>
-            <div className="font-heading text-lg font-bold">{formatCurrency(tenant.monthly_rent)}</div>
+            <div className="mb-0.5 flex items-center gap-2">
+              <div className="text-[11px] font-semibold text-gray-500">Monthly rent</div>
+              <button onClick={() => setEditingRent(true)} className="text-[10px] font-bold text-blue-600">
+                Edit
+              </button>
+            </div>
+            {editingRent ? (
+              <input
+                type="number"
+                autoFocus
+                defaultValue={tenant.monthly_rent}
+                onBlur={(e) => handleRentChange(e.target.value)}
+                className="w-28 rounded border border-blue-300 px-2 py-1 text-sm font-bold"
+              />
+            ) : (
+              <div className="font-heading text-lg font-bold">{formatCurrency(tenant.monthly_rent)}</div>
+            )}
           </div>
           <div className="text-right">
             <div className="text-[11px] font-semibold text-gray-500">Total collected</div>
             <div className="font-heading text-lg font-bold text-emerald-600">{formatCurrency(totalPaid)}</div>
           </div>
         </div>
+        {editingRent ? (
+          <p className="-mt-3 mb-5 text-[11px] text-gray-400">
+            Any cycle that&apos;s already paid stays as-is; any still-unpaid cycle is updated to
+            this new amount immediately. Future cycles use it automatically.
+          </p>
+        ) : null}
 
         <div className="mb-5 rounded-xl border border-gray-100 p-4">
           <div className="mb-2 flex items-center justify-between">

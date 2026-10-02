@@ -122,6 +122,17 @@ payment, where the regular cycle should start from, say, the 1st of the next mon
 of 30 days after the actual move-in date. If set, it replaces `move_in_date` as the anchor
 for all future due dates; the tenant's current unpaid cycle is realigned immediately.
 
+## Revising a tenant's rent
+
+Monthly rent is editable from the Tenant Payment History page at any time. Any cycle that's
+already **paid** is never touched (it's historical fact, frozen at whatever was actually
+charged). Any cycle that's still **unpaid** is immediately corrected to the new amount —
+covers both "I typed the wrong number" and "rent went up," since in both cases the
+outstanding bill should reflect the current rate. Future cycles pick up the new rate
+automatically (the cron reads `monthly_rent` fresh each time it generates one). Every
+amount change is logged to `payment_audit_log`. Dashboard and Reports need no special
+handling since they always read live payment amounts.
+
 ## Multi-month overdue
 
 A tenant who misses more than one cycle accumulates a separate unpaid `payments` row per
