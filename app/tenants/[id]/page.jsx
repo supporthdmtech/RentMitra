@@ -131,8 +131,9 @@ export default function TenantPaymentHistoryPage() {
         </div>
         {editingRent ? (
           <p className="-mt-3 mb-5 text-[11px] text-gray-400">
-            Any cycle that&apos;s already paid stays as-is; any still-unpaid cycle is updated to
-            this new amount immediately. Future cycles use it automatically.
+            Only the current pending cycle (not yet due) updates to this amount. Anything
+            already overdue keeps the old rent — that month's already passed. Anything already
+            paid is untouched either way. Future cycles use the new rate automatically.
           </p>
         ) : null}
 
