@@ -24,7 +24,8 @@ from another's. The only server route is the monthly rent-generation cron.
    [`supabase/migrations/0002_google_auth.sql`](supabase/migrations/0002_google_auth.sql),
    [`supabase/migrations/0003_move_in_anchored_due_dates.sql`](supabase/migrations/0003_move_in_anchored_due_dates.sql),
    [`supabase/migrations/0004_tenant_billing_start_date.sql`](supabase/migrations/0004_tenant_billing_start_date.sql), then
-   [`supabase/migrations/0005_rooms_beds_billing_mode.sql`](supabase/migrations/0005_rooms_beds_billing_mode.sql).
+   [`supabase/migrations/0005_rooms_beds_billing_mode.sql`](supabase/migrations/0005_rooms_beds_billing_mode.sql), then
+   [`supabase/migrations/0006_drop_property_total_rent.sql`](supabase/migrations/0006_drop_property_total_rent.sql).
 3. Go to **Project Settings → API** and copy:
    - `Project URL` → `NEXT_PUBLIC_SUPABASE_URL`
    - `anon public` key → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
@@ -110,9 +111,11 @@ for all future due dates; the tenant's current unpaid cycle is realigned immedia
 ## Property types & billing
 
 Three property types: **Rental** (no rooms/beds concept — a fixed number of units, one
-tenant per unit, free-text room field, unchanged from V1), **PG** (owner chooses **bed-wise**
-or **room-wise** billing at creation, locked once rooms exist), and **Hostel** (always
-bed-wise). PG/Hostel properties have real `rooms` and `beds` records
+tenant per unit, free-text room field, unchanged from V1), **PG**, and **Hostel** — both of
+the latter let the owner choose **bed-wise** or **room-wise** billing at creation, locked
+once rooms exist. There's no "Property Total Rent" field — a property's rent is always the
+sum of its active tenants' individual `monthly_rent`, computed on the fly rather than
+entered upfront. PG/Hostel properties have real `rooms` and `beds` records
 ([lib/rooms.js](lib/rooms.js)) — created via **Manage Rooms**
 ([app/properties/[id]/rooms/page.jsx](<app/properties/[id]/rooms/page.jsx>)) before tenants
 can be added — so a bed shows as vacant even before anyone's ever been assigned to it.

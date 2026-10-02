@@ -59,7 +59,9 @@ export default function ProfilePage() {
         name: p.name,
         type: p.type,
         address: p.address,
-        total_rent: p.total_rent,
+        total_rent: tenants
+          .filter((t) => t.property_id === p.id)
+          .reduce((sum, t) => sum + Number(t.monthly_rent), 0),
         total_units: p.total_units,
       }))
     );

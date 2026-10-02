@@ -37,7 +37,7 @@ export default function DashboardPage() {
   const paid = payments.filter((p) => paymentStatus(p) === "paid");
   const pending = payments.filter((p) => paymentStatus(p) === "pending");
   const overdue = payments.filter((p) => paymentStatus(p) === "overdue");
-  const totalIncome = paid.reduce((sum, p) => sum + Number(p.amount_due), 0);
+  const expectedIncome = payments.reduce((sum, p) => sum + Number(p.amount_due), 0);
 
   return (
     <div className={loading ? "opacity-90" : ""}>
@@ -50,10 +50,10 @@ export default function DashboardPage() {
 
         <div className="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur">
           <div className="mb-1.5 text-[11px] uppercase tracking-wide opacity-85">
-            Current Rent Cycle
+            Expected This Cycle
           </div>
           <div className="font-heading text-3xl font-extrabold">
-            {formatCurrency(totalIncome)}
+            {formatCurrency(expectedIncome)}
           </div>
           <div className="mt-1.5 text-[11px] opacity-80">
             From {properties.length} properties

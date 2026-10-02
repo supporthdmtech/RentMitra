@@ -3,7 +3,6 @@
 import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createProperty, getProperty, updateProperty } from "@/lib/queries";
-import { formatCurrency } from "@/lib/dueDate";
 import GradientHeader from "@/components/GradientHeader";
 
 function AddPropertyForm() {
@@ -20,7 +19,6 @@ function AddPropertyForm() {
     type: "rental",
     billing_mode: "room",
     name: "",
-    total_rent: "",
     address: "",
     total_units: "1",
   });
@@ -32,7 +30,6 @@ function AddPropertyForm() {
         type: p.type,
         billing_mode: p.billing_mode || "room",
         name: p.name,
-        total_rent: String(p.total_rent),
         address: p.address,
         total_units: String(p.total_units),
       });
@@ -41,11 +38,9 @@ function AddPropertyForm() {
   }, [editId, isEdit]);
 
   const isRental = form.type === "rental";
+  const hasBillingMode = form.type === "pg" || form.type === "hostel";
   const step1Valid =
-    form.name.trim() &&
-    form.total_rent &&
-    form.address.trim() &&
-    (!isRental || Number(form.total_units) > 0);
+    form.name.trim() && form.address.trim() && (!isRental || Number(form.total_units) > 0);
 
   async function handleSave() {
     setSaving(true);
@@ -54,9 +49,8 @@ function AddPropertyForm() {
       type: form.type,
       name: form.name.trim(),
       address: form.address.trim(),
-      total_rent: Number(form.total_rent),
       total_units: isRental ? Number(form.total_units) : 1,
-      billing_mode: form.type === "pg" ? form.billing_mode : form.type === "hostel" ? "bed" : null,
+      billing_mode: hasBillingMode ? form.billing_mode : null,
     };
     try {
       if (isEdit) {
@@ -118,7 +112,7 @@ function AddPropertyForm() {
               ) : null}
             </div>
 
-            {form.type === "pg" ? (
+            {hasBillingMode ? (
               <div className="mb-6">
                 <div className="font-heading mb-3 text-[13px] font-bold">How is it billed?</div>
                 <div className="grid grid-cols-2 gap-3">
@@ -145,27 +139,11 @@ function AddPropertyForm() {
               </div>
             ) : null}
 
-            {form.type === "hostel" ? (
-              <p className="mb-6 text-[11px] text-gray-400">
-                Hostels are always billed bed-wise — you&apos;ll add rooms and beds next.
-              </p>
-            ) : null}
-
             <Field label="Property Name *">
               <input
                 value={form.name}
                 onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
                 placeholder="e.g., Vihar Nagar 2-BHK"
-                className="w-full rounded-lg border-[1.5px] border-gray-200 px-3.5 py-3 text-sm"
-              />
-            </Field>
-
-            <Field label="Property Total Rent (₹) *">
-              <input
-                type="number"
-                value={form.total_rent}
-                onChange={(e) => setForm((f) => ({ ...f, total_rent: e.target.value }))}
-                placeholder="25,000"
                 className="w-full rounded-lg border-[1.5px] border-gray-200 px-3.5 py-3 text-sm"
               />
             </Field>
@@ -180,7 +158,12 @@ function AddPropertyForm() {
                   className="w-full rounded-lg border-[1.5px] border-gray-200 px-3.5 py-3 text-sm"
                 />
               </Field>
-            ) : null}
+            ) : (
+              <p className="mb-5 text-[11px] text-gray-400">
+                Rent is calculated from whatever you set per tenant once you add them — no need
+                to enter a total here.
+              </p>
+            )}
 
             <Field label="Address *">
               <input
@@ -206,11 +189,10 @@ function AddPropertyForm() {
                 label="Type"
                 value={form.type === "rental" ? "Rental" : form.type === "pg" ? "PG" : "Hostel"}
               />
-              {form.type === "pg" ? (
+              {hasBillingMode ? (
                 <SummaryRow label="Billing" value={form.billing_mode === "bed" ? "Bed-wise" : "Room-wise"} />
               ) : null}
               <SummaryRow label="Name" value={form.name} />
-              <SummaryRow label="Total rent" value={formatCurrency(Number(form.total_rent))} />
               {isRental ? <SummaryRow label="Units" value={form.total_units} /> : null}
               <SummaryRow label="Address" value={form.address} last />
             </div>
