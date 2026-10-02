@@ -17,16 +17,29 @@ export default function AtRiskPage() {
   const profile = data?.profile;
 
   // Collapse a tenant's multiple missed cycles down to their oldest (worst)
-  // one, so they appear once at their true severity.
-  const overdue = oldestUnpaidPerTenant(unpaid.filter((p) => paymentStatus(p) === "overdue"));
-  const critical = overdue.filter((p) => daysOverdue(p) >= 16).sort((a, b) => daysOverdue(b) - daysOverdue(a));
-  const medium = overdue.filter((p) => daysOverdue(p) < 16).sort((a, b) => daysOverdue(b) - daysOverdue(a));
+  // one for severity, but annotate it with the TOTAL they owe across every
+  // unpaid cycle (not just this one) — the oldest cycle sets how overdue
+  // they are, but the amount should reflect the full outstanding balance.
+  const worstPerTenant = oldestUnpaidPerTenant(unpaid.filter((p) => paymentStatus(p) === "overdue")).map(
+    (p) => {
+      const tenantUnpaid = unpaid.filter((u) => u.tenant_id === p.tenant_id);
+      return {
+        ...p,
+        totalOwed: tenantUnpaid.reduce((s, u) => s + Number(u.amount_due), 0),
+        cycleCount: tenantUnpaid.length,
+      };
+    }
+  );
+  const critical = worstPerTenant.filter((p) => daysOverdue(p) >= 16).sort((a, b) => daysOverdue(b) - daysOverdue(a));
+  const medium = worstPerTenant.filter((p) => daysOverdue(p) < 16).sort((a, b) => daysOverdue(b) - daysOverdue(a));
 
   function remindUrl(payment) {
     return buildWhatsAppReminderUrl({
       template: profile?.whatsapp_template,
       tenant: payment.tenant,
-      payment,
+      // Remind them for the full amount owed across every missed cycle,
+      // not just the oldest one.
+      payment: { ...payment, amount_due: payment.totalOwed },
       upi: profile?.upi_id,
     });
   }
@@ -38,7 +51,7 @@ export default function AtRiskPage() {
       <div className="p-5">
         {!data ? (
           <p className="text-sm text-gray-500">Loading…</p>
-        ) : overdue.length === 0 ? (
+        ) : worstPerTenant.length === 0 ? (
           <p className="text-sm text-gray-500">No overdue tenants right now.</p>
         ) : (
           <>
@@ -88,7 +101,8 @@ function RiskGroup({ title, items, remindUrl, tier }) {
               </span>
             </div>
             <div className="mb-2.5 text-xs text-gray-600">
-              Due {formatDate(p.due_date)} • {formatCurrency(p.amount_due)} pending
+              Due {formatDate(p.due_date)} • {formatCurrency(p.totalOwed)} pending
+              {p.cycleCount > 1 ? ` (${p.cycleCount} months)` : ""}
             </div>
             {p.tenant?.phone ? (
               tier === "critical" ? (

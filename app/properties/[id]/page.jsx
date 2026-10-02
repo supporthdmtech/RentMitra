@@ -21,7 +21,7 @@ export default function PropertyDetailPage() {
   const [property, setProperty] = useState(null);
   const [tenants, setTenants] = useState([]);
   const [rooms, setRooms] = useState([]);
-  const [payments, setPayments] = useState([]);
+  const [allPayments, setAllPayments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [confirmDelete, setConfirmDelete] = useState(0); // 0 = none, 1 = first confirm, 2 = second (has tenants)
 
@@ -39,8 +39,7 @@ export default function PropertyDetailPage() {
     setProperty(propertyData);
     setTenants(tenantData);
     setRooms(roomData);
-    // One row per tenant: their current rent cycle.
-    setPayments(latestPerTenant(paymentData));
+    setAllPayments(paymentData);
     setLoading(false);
   }
 
@@ -59,8 +58,15 @@ export default function PropertyDetailPage() {
 
   if (loading) return <p className="p-6 text-sm text-gray-500">Loading…</p>;
 
-  const collected = payments.filter((p) => paymentStatus(p) === "paid").reduce((s, p) => s + Number(p.amount_due), 0);
-  const due = payments.reduce((s, p) => s + Number(p.amount_due), 0) - collected;
+  // "Collected" reflects each tenant's current cycle; "Due" must count
+  // EVERY unpaid cycle, not just the latest, so a tenant behind by 2
+  // months counts for both.
+  const currentCycle = latestPerTenant(allPayments);
+  const unpaid = allPayments.filter((p) => paymentStatus(p) !== "paid");
+  const collected = currentCycle
+    .filter((p) => paymentStatus(p) === "paid")
+    .reduce((s, p) => s + Number(p.amount_due), 0);
+  const due = unpaid.reduce((s, p) => s + Number(p.amount_due), 0);
   const mode = effectiveBillingMode(property);
   const occupancy = occupancyFor(property, { rooms, tenants });
   const occupiedPct = occupancy.total ? Math.round((occupancy.occupied / occupancy.total) * 100) : 0;
@@ -185,7 +191,8 @@ export default function PropertyDetailPage() {
             <p className="text-sm text-gray-500">No tenants yet.</p>
           ) : (
             tenants.map((tenant) => {
-              const payment = payments.find((p) => p.tenant_id === tenant.id);
+              const payment = currentCycle.find((p) => p.tenant_id === tenant.id);
+              const unpaidCycles = unpaid.filter((p) => p.tenant_id === tenant.id).length;
               return (
                 <Link
                   key={tenant.id}
@@ -204,7 +211,12 @@ export default function PropertyDetailPage() {
                   </div>
                   <div className="text-right">
                     <div className="text-sm font-bold">{formatCurrency(tenant.monthly_rent)}</div>
-                    {payment ? <StatusPill status={paymentStatus(payment)} /> : null}
+                    {payment ? (
+                      <StatusPill
+                        status={paymentStatus(payment)}
+                        suffix={unpaidCycles > 1 ? `(${unpaidCycles} months)` : undefined}
+                      />
+                    ) : null}
                   </div>
                 </Link>
               );

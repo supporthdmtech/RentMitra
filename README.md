@@ -93,21 +93,6 @@ supabase/       SQL migrations (schema + RLS policies)
 middleware.js   redirects signed-out users to /login and signed-in users away from it
 ```
 
-## Rent due dates
-
-Each tenant's rent cycle is independent: the first payment is due **30 days after their
-move-in date**, and every cycle after that is another 30 days on from the last one — not
-tied to the calendar month. Overdue counting starts immediately once a due date passes
-(no grace period), and At-Risk severity is: **Medium** = 1–15 days overdue, **Critical** =
-16+ days overdue. A daily cron job ([app/api/cron/generate-rent/route.js](app/api/cron/generate-rent/route.js))
-creates each tenant's next cycle once their current one's due date arrives.
-
-An owner can override a tenant's cycle anchor with a **Billing Start Date** (set from the
-Tenant Payment History page) — useful after a mid-month move-in with a partial first
-payment, where the regular cycle should start from, say, the 1st of the next month instead
-of 30 days after the actual move-in date. If set, it replaces `move_in_date` as the anchor
-for all future due dates; the tenant's current unpaid cycle is realigned immediately.
-
 ## Property types & billing
 
 Three property types: **Rental** (no rooms/beds concept — a fixed number of units, one
@@ -136,6 +121,15 @@ Tenant Payment History page) — useful after a mid-month move-in with a partial
 payment, where the regular cycle should start from, say, the 1st of the next month instead
 of 30 days after the actual move-in date. If set, it replaces `move_in_date` as the anchor
 for all future due dates; the tenant's current unpaid cycle is realigned immediately.
+
+## Multi-month overdue
+
+A tenant who misses more than one cycle accumulates a separate unpaid `payments` row per
+missed cycle (nothing is merged or overwritten). Dashboard, Property Detail, and At-Risk all
+sum **every** unpaid cycle for a tenant — not just their most recent one — so a tenant behind
+by 2 months shows the full ₹ total owed, with a "(N months)" note wherever that matters (the
+tenant row's status pill, the At-Risk card, the WhatsApp reminder amount). The Payments tab
+already shows each cycle as its own card, so multi-month tenants were always visible there.
 
 ## Navigation & performance
 
