@@ -84,7 +84,7 @@ export default function DashboardPage() {
               {formatCurrency(totalOutstanding)}
             </div>
             <div className="mt-1.5 text-[11px] opacity-80">
-              Still to collect
+              {formatCurrency(pendingAmount)} due now · {formatCurrency(overdueAmount)} past overdue
             </div>
           </div>
         </div>

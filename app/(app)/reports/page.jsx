@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { getActiveProperties, getPaymentsInRange } from "@/lib/queries";
+import { getActiveProperties, getPaymentsCollectedInRange, getUnpaidPayments } from "@/lib/queries";
 import { addDays, formatCurrency, formatDate, paymentStatus, todayIso } from "@/lib/dueDate";
 import { downloadIncomeReportPdf } from "@/lib/reportPdf";
 import { downloadCsv } from "@/lib/csv";
@@ -19,31 +19,47 @@ export default function ReportsPage() {
   const [to, setTo] = useState(defaultRange.to);
 
   const { data: properties } = useCachedQuery("reports-properties", getActiveProperties);
-  const { data: payments, loading } = useCachedQuery(
-    `reports-payments:${from}:${to}`,
-    () => getPaymentsInRange(from, to),
+  // "Collected" is cash-basis: payments actually RECEIVED in this window,
+  // regardless of which month's rent cycle they happened to settle — so
+  // paying off an old overdue cycle today counts as today's income, not
+  // something buried in a past month. Pending/Overdue are a live snapshot
+  // (not date-range-bound — "outstanding" is a balance as of now, not a
+  // flow over a period).
+  const { data: collected, loading } = useCachedQuery(
+    `reports-collected:${from}:${to}`,
+    () => getPaymentsCollectedInRange(from, to),
     [from, to]
   );
+  const { data: unpaid } = useCachedQuery("reports-unpaid", getUnpaidPayments);
 
-  const totals = (payments || []).reduce(
-    (acc, p) => {
-      const status = paymentStatus(p);
-      acc[status] += Number(p.amount_due);
-      return acc;
-    },
-    { paid: 0, pending: 0, overdue: 0 }
-  );
+  const collectedRows = collected || [];
+  const unpaidRows = unpaid || [];
+
+  const totals = {
+    paid: collectedRows.reduce((s, p) => s + Number(p.amount_due), 0),
+    pending: unpaidRows
+      .filter((p) => paymentStatus(p) === "pending")
+      .reduce((s, p) => s + Number(p.amount_due), 0),
+    overdue: unpaidRows
+      .filter((p) => paymentStatus(p) === "overdue")
+      .reduce((s, p) => s + Number(p.amount_due), 0),
+  };
 
   const byProperty = (properties || [])
     .map((property) => {
-      const rows = (payments || []).filter((p) => p.property_id === property.id);
-      const tenantIds = new Set(rows.map((r) => r.tenant_id));
+      const paidRows = collectedRows.filter((p) => p.property_id === property.id);
+      const propertyUnpaid = unpaidRows.filter((p) => p.property_id === property.id);
+      const tenantIds = new Set([...paidRows, ...propertyUnpaid].map((r) => r.tenant_id));
       return {
         id: property.id,
         name: property.name,
-        paid: rows.filter((r) => paymentStatus(r) === "paid").reduce((s, r) => s + Number(r.amount_due), 0),
-        pending: rows.filter((r) => paymentStatus(r) === "pending").reduce((s, r) => s + Number(r.amount_due), 0),
-        overdue: rows.filter((r) => paymentStatus(r) === "overdue").reduce((s, r) => s + Number(r.amount_due), 0),
+        paid: paidRows.reduce((s, r) => s + Number(r.amount_due), 0),
+        pending: propertyUnpaid
+          .filter((r) => paymentStatus(r) === "pending")
+          .reduce((s, r) => s + Number(r.amount_due), 0),
+        overdue: propertyUnpaid
+          .filter((r) => paymentStatus(r) === "overdue")
+          .reduce((s, r) => s + Number(r.amount_due), 0),
         tenantCount: tenantIds.size,
       };
     })
@@ -57,14 +73,13 @@ export default function ReportsPage() {
 
   function handleDownloadCsv() {
     downloadCsv(
-      `rentmitra-payments-${from}-to-${to}.csv`,
-      (payments || []).map((p) => ({
+      `rentmitra-collections-${from}-to-${to}.csv`,
+      collectedRows.map((p) => ({
         property: p.property?.name,
         tenant: p.tenant?.name,
         due_date: p.due_date,
         amount_due: p.amount_due,
-        status: paymentStatus(p),
-        paid_at: p.paid_at || "",
+        paid_at: p.paid_at,
       }))
     );
   }
@@ -114,12 +129,13 @@ export default function ReportsPage() {
         ) : null}
 
         <div className="mb-6 rounded-2xl border border-purple-100 bg-gradient-to-br from-violet-50 to-purple-50 p-5 text-center">
-          <div className="mb-2 text-xs font-semibold text-purple-600">TOTAL COLLECTED</div>
+          <div className="mb-2 text-xs font-semibold text-purple-600">COLLECTED IN THIS PERIOD</div>
           <div className="font-heading mb-3 text-4xl font-extrabold text-purple-600">
             {formatCurrency(totals.paid)}
           </div>
           <div className="text-xs text-purple-400">
-            Pending {formatCurrency(totals.pending)} • Overdue {formatCurrency(totals.overdue)}
+            Outstanding as of today — Pending {formatCurrency(totals.pending)} • Overdue{" "}
+            {formatCurrency(totals.overdue)}
           </div>
         </div>
 
@@ -128,7 +144,7 @@ export default function ReportsPage() {
           {loading ? (
             <p className="text-sm text-gray-500">Loading…</p>
           ) : byProperty.length === 0 ? (
-            <p className="text-sm text-gray-500">No payment records in this range.</p>
+            <p className="text-sm text-gray-500">No payment activity to show.</p>
           ) : (
             byProperty.map((p) => (
               <div key={p.id} className="mb-2.5 rounded-lg border-l-4 border-blue-600 bg-sky-50 p-3">

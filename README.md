@@ -144,6 +144,17 @@ Mark Paid is available on both pending and overdue cycles — a tenant who pays 
 shouldn't have to wait until it's overdue to be marked. Remind only shows on overdue cycles
 (no nudge needed before something's actually due).
 
+## Reports: cash-basis, not due-date-basis
+
+Income Reports show money **actually received** in the selected period — filtered by
+`paid_at`, not `due_date`. Paying off an old overdue cycle today counts as today's income,
+not a line item buried in whatever month it was originally due (the earlier due-date-based
+filtering made a just-collected payment "disappear" into a past month's window). Pending and
+Overdue figures in Reports are a live snapshot as of now, not bound to the selected date
+range, since "outstanding" is a balance, not something that happened "during" a period.
+Dashboard's Outstanding card is similarly split into "due now" vs "past overdue" underneath
+the headline number.
+
 ## Multi-month overdue
 
 A tenant who misses more than one cycle accumulates a separate unpaid `payments` row per
