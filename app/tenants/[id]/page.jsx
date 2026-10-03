@@ -11,7 +11,7 @@ import {
   undoPaymentPaid,
   updateTenant,
 } from "@/lib/queries";
-import { formatCurrency, formatDate } from "@/lib/dueDate";
+import { formatCurrency, formatDate, formatMonthLabel } from "@/lib/dueDate";
 import { buildWhatsAppReminderUrl } from "@/lib/whatsapp";
 import GradientHeader from "@/components/GradientHeader";
 import PaymentCard from "@/components/PaymentCard";
@@ -197,7 +197,7 @@ export default function TenantPaymentHistoryPage() {
               <PaymentCard
                 key={payment.id}
                 payment={payment}
-                subtitle={formatDate(payment.due_date)}
+                subtitle={formatMonthLabel(payment.due_date)}
                 onMarkPaid={() => handleMarkPaid(payment)}
                 onUndo={() => handleUndo(payment)}
                 onRemind={tenant.phone ? () => handleRemind(payment) : undefined}

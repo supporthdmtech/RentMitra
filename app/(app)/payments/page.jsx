@@ -12,7 +12,7 @@ import {
 import { buildWhatsAppReminderUrl } from "@/lib/whatsapp";
 import { daysOverdue, paymentStatus } from "@/lib/dueDate";
 import { useCachedQuery } from "@/lib/useCachedQuery";
-import PaymentCard from "@/components/PaymentCard";
+import TenantPaymentGroup from "@/components/TenantPaymentGroup";
 
 const FILTERS = [
   { value: "all", label: "All" },
@@ -20,6 +20,35 @@ const FILTERS = [
   { value: "pending", label: "Pending" },
   { value: "paid", label: "Paid" },
 ];
+
+// All of one tenant's cycles together, instead of scattered through a flat
+// list — an owner shouldn't have to hunt for a tenant's 2nd overdue month.
+// Groups with any overdue cycle come first (most urgent), then pending,
+// then fully-paid; ties broken by whichever cycle is most overdue/soonest.
+function groupByTenant(payments) {
+  const groups = new Map();
+  for (const p of payments) {
+    if (!groups.has(p.tenant_id)) {
+      groups.set(p.tenant_id, { tenant: p.tenant, property: p.property, payments: [] });
+    }
+    groups.get(p.tenant_id).payments.push(p);
+  }
+
+  const list = [...groups.values()];
+  for (const g of list) {
+    g.payments.sort((a, b) => new Date(b.due_date) - new Date(a.due_date));
+  }
+
+  const severity = (g) => {
+    if (g.payments.some((p) => paymentStatus(p) === "overdue")) return 0;
+    if (g.payments.some((p) => paymentStatus(p) === "pending")) return 1;
+    return 2;
+  };
+  const worstDue = (g) => Math.min(...g.payments.map((p) => new Date(p.due_date).getTime()));
+  list.sort((a, b) => severity(a) - severity(b) || worstDue(a) - worstDue(b));
+
+  return list;
+}
 
 async function loadPayments() {
   const [payments, profile] = await Promise.all([getAllPaymentsForOwner(), getProfile()]);
@@ -62,6 +91,7 @@ export default function PaymentsPage() {
   }
 
   const filtered = filter === "all" ? payments : payments.filter((p) => paymentStatus(p) === filter);
+  const groups = groupByTenant(filtered);
   const overdue = oldestUnpaidPerTenant(payments.filter((p) => paymentStatus(p) === "overdue"));
   const criticalCount = overdue.filter((p) => daysOverdue(p) >= 16).length;
 
@@ -99,19 +129,19 @@ export default function PaymentsPage() {
           ))}
         </div>
 
-        {filtered.length === 0 ? (
+        {groups.length === 0 ? (
           <p className="text-sm text-gray-500">No rent records here.</p>
         ) : (
           <div className="flex flex-col gap-3">
-            {filtered.map((payment) => (
-              <PaymentCard
-                key={payment.id}
-                payment={payment}
-                subtitle={payment.tenant?.name}
-                meta={payment.property?.name}
-                onMarkPaid={() => handleMarkPaid(payment)}
-                onUndo={() => handleUndo(payment)}
-                onRemind={payment.tenant?.phone ? () => handleRemind(payment) : undefined}
+            {groups.map((group) => (
+              <TenantPaymentGroup
+                key={group.payments[0].tenant_id}
+                tenantName={group.tenant?.name}
+                propertyName={group.property?.name}
+                payments={group.payments}
+                onMarkPaid={handleMarkPaid}
+                onUndo={handleUndo}
+                onRemind={group.tenant?.phone ? handleRemind : undefined}
               />
             ))}
           </div>

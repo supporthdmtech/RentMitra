@@ -144,6 +144,17 @@ Mark Paid is available on both pending and overdue cycles — a tenant who pays 
 shouldn't have to wait until it's overdue to be marked. Remind only shows on overdue cycles
 (no nudge needed before something's actually due).
 
+## Payments tab: grouped by tenant, labeled by month
+
+Cycles are shown as "September Rent" / "October Rent" (derived from `due_date`,
+[lib/dueDate.js:formatMonthLabel](lib/dueDate.js)) rather than a raw date — a deliberate
+simplification since owners think in months, not exact 30-day cycle boundaries, and many
+aren't especially tech-comfortable. All of one tenant's cycles are grouped under a single
+card ([components/TenantPaymentGroup.jsx](components/TenantPaymentGroup.jsx)) instead of
+being scattered through a flat chronological list — a tenant behind on 2 months previously
+showed as 2 separate cards possibly pages apart; now they're always together, group sorted
+with any-overdue tenants first.
+
 ## Reports: cash-basis, not due-date-basis
 
 Income Reports show money **actually received** in the selected period — filtered by

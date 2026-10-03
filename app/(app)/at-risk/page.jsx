@@ -1,7 +1,7 @@
 "use client";
 
 import { getProfile, getUnpaidPayments, oldestUnpaidPerTenant } from "@/lib/queries";
-import { daysOverdue, formatCurrency, formatDate, paymentStatus } from "@/lib/dueDate";
+import { daysOverdue, formatCurrency, formatMonthLabel, paymentStatus } from "@/lib/dueDate";
 import { buildWhatsAppReminderUrl } from "@/lib/whatsapp";
 import { useCachedQuery } from "@/lib/useCachedQuery";
 import GradientHeader from "@/components/GradientHeader";
@@ -101,7 +101,7 @@ function RiskGroup({ title, items, remindUrl, tier }) {
               </span>
             </div>
             <div className="mb-2.5 text-xs text-gray-600">
-              Due {formatDate(p.due_date)} • {formatCurrency(p.totalOwed)} pending
+              {formatMonthLabel(p.due_date)} • {formatCurrency(p.totalOwed)} pending
               {p.cycleCount > 1 ? ` (${p.cycleCount} months)` : ""}
             </div>
             {p.tenant?.phone ? (
