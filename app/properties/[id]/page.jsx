@@ -12,7 +12,7 @@ import {
   softDeleteProperty,
 } from "@/lib/queries";
 import { formatCurrency, paymentStatus } from "@/lib/dueDate";
-import { effectiveBillingMode, occupancyFor, roomBreakdown } from "@/lib/rooms";
+import { isRoomBased, occupancyFor, roomBreakdown } from "@/lib/rooms";
 import StatusPill from "@/components/StatusPill";
 
 export default function PropertyDetailPage() {
@@ -67,8 +67,9 @@ export default function PropertyDetailPage() {
     .filter((p) => paymentStatus(p) === "paid")
     .reduce((s, p) => s + Number(p.amount_due), 0);
   const due = unpaid.reduce((s, p) => s + Number(p.amount_due), 0);
-  const mode = effectiveBillingMode(property);
+  const roomBased = isRoomBased(property);
   const occupancy = occupancyFor(property, { rooms, tenants });
+  const unitLabel = occupancy.mode === "bed" ? "beds" : occupancy.mode === "room" ? "rooms" : "units";
   const occupiedPct = occupancy.total ? Math.round((occupancy.occupied / occupancy.total) * 100) : 0;
   const breakdown = roomBreakdown(property, { rooms, tenants });
 
@@ -92,9 +93,9 @@ export default function PropertyDetailPage() {
           <span className="inline-block rounded-full bg-white/25 px-2.5 py-0.5 text-[10px] font-bold">
             {property.type.toUpperCase()}
           </span>
-          {mode ? (
+          {roomBased && occupancy.mode ? (
             <span className="inline-block rounded-full bg-white/25 px-2.5 py-0.5 text-[10px] font-bold">
-              {mode === "bed" ? "BED-WISE" : "ROOM-WISE"}
+              {occupancy.mode === "bed" ? "BED-WISE" : occupancy.mode === "room" ? "ROOM-WISE" : "MIXED BILLING"}
             </span>
           ) : null}
         </div>
@@ -146,21 +147,23 @@ export default function PropertyDetailPage() {
           <div className="mb-2 flex justify-between text-xs font-bold">
             <span>Occupancy</span>
             <span className="text-orange-500">
-              {occupancy.occupied} of {occupancy.total} {mode === "bed" ? "beds" : mode === "room" ? "rooms" : "units"} ·{" "}
-              {occupiedPct}%
+              {occupancy.occupied} of {occupancy.total} {unitLabel} · {occupiedPct}%
             </span>
           </div>
           <div className="h-2 overflow-hidden rounded-full bg-orange-100">
             <div className="h-full bg-gradient-to-r from-orange-500 to-pink-500" style={{ width: `${occupiedPct}%` }} />
           </div>
 
-          {mode ? (
+          {roomBased ? (
             <>
               <div className="mt-3 flex flex-col gap-1.5">
                 {breakdown.map(({ room, beds, tenant }) => (
                   <div key={room.id} className="flex items-center justify-between text-[11px]">
-                    <span className="text-gray-500">Room {room.room_no}</span>
-                    {mode === "bed" ? (
+                    <span className="text-gray-500">
+                      Room {room.room_no}{" "}
+                      <span className="text-gray-300">({room.billing_mode === "bed" ? "bed-wise" : "room-wise"})</span>
+                    </span>
+                    {room.billing_mode === "bed" ? (
                       <span className="font-semibold">
                         {beds.filter((b) => b.tenant).length}/{beds.length} beds
                       </span>

@@ -25,7 +25,8 @@ from another's. The only server route is the monthly rent-generation cron.
    [`supabase/migrations/0003_move_in_anchored_due_dates.sql`](supabase/migrations/0003_move_in_anchored_due_dates.sql),
    [`supabase/migrations/0004_tenant_billing_start_date.sql`](supabase/migrations/0004_tenant_billing_start_date.sql), then
    [`supabase/migrations/0005_rooms_beds_billing_mode.sql`](supabase/migrations/0005_rooms_beds_billing_mode.sql), then
-   [`supabase/migrations/0006_drop_property_total_rent.sql`](supabase/migrations/0006_drop_property_total_rent.sql).
+   [`supabase/migrations/0006_drop_property_total_rent.sql`](supabase/migrations/0006_drop_property_total_rent.sql), then
+   [`supabase/migrations/0007_per_room_billing_mode.sql`](supabase/migrations/0007_per_room_billing_mode.sql).
 3. Go to **Project Settings → API** and copy:
    - `Project URL` → `NEXT_PUBLIC_SUPABASE_URL`
    - `anon public` key → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
@@ -96,16 +97,20 @@ middleware.js   redirects signed-out users to /login and signed-in users away fr
 ## Property types & billing
 
 Three property types: **Rental** (no rooms/beds concept — a fixed number of units, one
-tenant per unit, free-text room field, unchanged from V1), **PG**, and **Hostel** — both of
-the latter let the owner choose **bed-wise** or **room-wise** billing at creation, locked
-once rooms exist. There's no "Property Total Rent" field — a property's rent is always the
-sum of its active tenants' individual `monthly_rent`, computed on the fly rather than
-entered upfront. PG/Hostel properties have real `rooms` and `beds` records
-([lib/rooms.js](lib/rooms.js)) — created via **Manage Rooms**
-([app/properties/[id]/rooms/page.jsx](<app/properties/[id]/rooms/page.jsx>)) before tenants
-can be added — so a bed shows as vacant even before anyone's ever been assigned to it.
-Room-wise billing is one tenant record per room (no per-occupant tracking, matching how the
-rest of the app already treats tenants).
+tenant per unit, free-text room field, unchanged from V1), **PG**, and **Hostel**. There's no
+"Property Total Rent" field — a property's rent is always the sum of its active tenants'
+individual `monthly_rent`, computed on the fly rather than entered upfront.
+
+Billing mode (**bed-wise** or **room-wise**) is chosen **per room**, not per property — a
+single PG (or hostel) can mix private rooms with shared/dorm rooms in the same building,
+which is how real PGs actually work. It's set when adding a room via **Manage Rooms**
+([app/properties/[id]/rooms/page.jsx](<app/properties/[id]/rooms/page.jsx>)) — real `rooms`
+and `beds` records ([lib/rooms.js](lib/rooms.js)), created before tenants can be added, so a
+bed shows as vacant even before anyone's ever been assigned to it. A property's occupancy
+total sums every bed (in bed-wise rooms) and every whole room (in room-wise rooms) as one
+"slot" so the numbers stay meaningful even when a property's rooms are mixed. Room-wise
+billing is one tenant record per room (no per-occupant tracking, matching how the rest of
+the app already treats tenants).
 
 ## Rent due dates
 
@@ -132,6 +137,12 @@ outstanding bill should reflect the current rate. Future cycles pick up the new 
 automatically (the cron reads `monthly_rent` fresh each time it generates one). Every
 amount change is logged to `payment_audit_log`. Dashboard and Reports need no special
 handling since they always read live payment amounts.
+
+## Payments tab actions
+
+Mark Paid is available on both pending and overdue cycles — a tenant who pays early
+shouldn't have to wait until it's overdue to be marked. Remind only shows on overdue cycles
+(no nudge needed before something's actually due).
 
 ## Multi-month overdue
 

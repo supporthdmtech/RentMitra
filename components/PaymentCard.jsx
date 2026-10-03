@@ -48,21 +48,25 @@ export default function PaymentCard({ payment, subtitle, meta, onMarkPaid, onUnd
                 Undo
               </button>
             ) : null
-          ) : status === "pending" ? (
-            onRemind ? (
-              <button onClick={onRemind} className="mt-1 rounded border border-amber-300 px-2 py-0.5 text-[10px] font-semibold text-amber-600">
-                Remind
-              </button>
-            ) : null
           ) : (
+            // Pending and overdue can both be marked paid any time (a
+            // tenant who pays early shouldn't have to wait until it's
+            // overdue) — only overdue also gets a Remind nudge.
             <div className="mt-1 flex gap-1.5">
-              {onRemind ? (
+              {status === "overdue" && onRemind ? (
                 <button onClick={onRemind} className="rounded border border-red-300 px-2 py-0.5 text-[10px] font-semibold text-red-600">
                   Remind
                 </button>
               ) : null}
               {onMarkPaid ? (
-                <button onClick={onMarkPaid} className="rounded bg-red-600 px-2 py-0.5 text-[10px] font-semibold text-white">
+                <button
+                  onClick={onMarkPaid}
+                  className={`rounded px-2 py-0.5 text-[10px] font-semibold ${
+                    status === "overdue"
+                      ? "bg-red-600 text-white"
+                      : "border border-amber-300 text-amber-600"
+                  }`}
+                >
                   Mark Paid
                 </button>
               ) : null}

@@ -10,7 +10,7 @@ import {
   getRoomsForProperty,
   getTenantsByProperty,
 } from "@/lib/queries";
-import { effectiveBillingMode, roomBreakdown } from "@/lib/rooms";
+import { roomBreakdown } from "@/lib/rooms";
 import GradientHeader from "@/components/GradientHeader";
 
 export default function ManageRoomsPage() {
@@ -22,6 +22,7 @@ export default function ManageRoomsPage() {
   const [loading, setLoading] = useState(true);
   const [adding, setAdding] = useState(false);
   const [roomNo, setRoomNo] = useState("");
+  const [billingMode, setBillingMode] = useState("room");
   const [bedCount, setBedCount] = useState("2");
   const [error, setError] = useState("");
   const [deleteError, setDeleteError] = useState("");
@@ -39,12 +40,14 @@ export default function ManageRoomsPage() {
     setProperty(propertyData);
     setRooms(roomData);
     setTenants(tenantData);
+    // Hostels are more often bed-wise/dorm-style, PGs more often
+    // private-room — just a sensible starting point, editable per room.
+    setBillingMode(propertyData.type === "hostel" ? "bed" : "room");
     setLoading(false);
   }
 
   if (loading) return <p className="p-6 text-sm text-gray-500">Loading…</p>;
 
-  const mode = effectiveBillingMode(property);
   const breakdown = roomBreakdown(property, { rooms, tenants });
 
   async function handleAddRoom() {
@@ -57,7 +60,8 @@ export default function ManageRoomsPage() {
       await createRoom({
         propertyId,
         roomNo: roomNo.trim(),
-        bedCount: mode === "bed" ? Number(bedCount) : 0,
+        billingMode,
+        bedCount: billingMode === "bed" ? Number(bedCount) : 0,
       });
       setRoomNo("");
       setBedCount("2");
@@ -86,7 +90,7 @@ export default function ManageRoomsPage() {
     <div className="mx-auto min-h-screen max-w-md bg-white">
       <GradientHeader
         title="Manage Rooms"
-        subtitle={`${property.name} • ${mode === "bed" ? "Bed-wise" : "Room-wise"} billing`}
+        subtitle={property.name}
         gradient="orange"
         backHref={`/properties/${propertyId}`}
       />
@@ -101,7 +105,12 @@ export default function ManageRoomsPage() {
             {breakdown.map(({ room, beds, tenant }) => (
               <div key={room.id} className="rounded-xl border border-gray-100 p-3.5">
                 <div className="mb-2 flex items-center justify-between">
-                  <div className="text-sm font-bold">Room {room.room_no}</div>
+                  <div className="flex items-center gap-2">
+                    <div className="text-sm font-bold">Room {room.room_no}</div>
+                    <span className="rounded-full bg-gray-100 px-2 py-0.5 text-[9px] font-bold text-gray-500">
+                      {room.billing_mode === "bed" ? "BED-WISE" : "ROOM-WISE"}
+                    </span>
+                  </div>
                   <button
                     onClick={() => handleDeleteRoom(room.id)}
                     className="text-[11px] font-semibold text-red-500"
@@ -109,7 +118,7 @@ export default function ManageRoomsPage() {
                     Delete
                   </button>
                 </div>
-                {mode === "bed" ? (
+                {room.billing_mode === "bed" ? (
                   <div className="flex flex-wrap gap-2">
                     {beds.map(({ bed, tenant: bedTenant }) => (
                       <span
@@ -147,7 +156,28 @@ export default function ManageRoomsPage() {
               placeholder="e.g., 101"
               className="mb-4 w-full rounded-lg border-[1.5px] border-gray-200 px-3.5 py-3 text-sm"
             />
-            {mode === "bed" ? (
+
+            <label className="mb-2 block text-xs font-semibold">How is this room billed? *</label>
+            <div className="mb-4 grid grid-cols-2 gap-2.5">
+              <button
+                onClick={() => setBillingMode("bed")}
+                className={`rounded-lg border-2 p-3 text-xs font-bold ${
+                  billingMode === "bed" ? "border-blue-600 bg-blue-50 text-blue-600" : "border-gray-200 text-gray-500"
+                }`}
+              >
+                🛏️ Bed-wise
+              </button>
+              <button
+                onClick={() => setBillingMode("room")}
+                className={`rounded-lg border-2 p-3 text-xs font-bold ${
+                  billingMode === "room" ? "border-blue-600 bg-blue-50 text-blue-600" : "border-gray-200 text-gray-500"
+                }`}
+              >
+                🚪 Room-wise
+              </button>
+            </div>
+
+            {billingMode === "bed" ? (
               <>
                 <label className="mb-2 block text-xs font-semibold">Number of Beds *</label>
                 <input

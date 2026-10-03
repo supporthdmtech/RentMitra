@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { createTenant, getProperty, getRoomsForProperty, getTenantsByProperty } from "@/lib/queries";
 import { todayIso } from "@/lib/dueDate";
-import { effectiveBillingMode } from "@/lib/rooms";
+import { isRoomBased } from "@/lib/rooms";
 import GradientHeader from "@/components/GradientHeader";
 
 export default function AddTenantPage() {
@@ -38,8 +38,7 @@ export default function AddTenantPage() {
     );
   }, [propertyId]);
 
-  const mode = property ? effectiveBillingMode(property) : null;
-  const isRental = !mode;
+  const isRental = property ? !isRoomBased(property) : false;
 
   const occupiedRoomIds = useMemo(
     () => new Set(tenants.filter((t) => t.room_id).map((t) => t.room_id)),
@@ -51,6 +50,7 @@ export default function AddTenantPage() {
   );
 
   const selectedRoom = rooms.find((r) => r.id === form.room_id);
+  const selectedRoomMode = selectedRoom?.billing_mode;
   const vacantBeds = selectedRoom ? (selectedRoom.beds || []).filter((b) => !occupiedBedIds.has(b.id)) : [];
 
   const valid = isRental
@@ -58,7 +58,7 @@ export default function AddTenantPage() {
     : form.name.trim() &&
       form.monthly_rent &&
       form.room_id &&
-      (mode !== "bed" || form.bed_id);
+      (selectedRoomMode !== "bed" || form.bed_id);
 
   async function handleSave() {
     setSaving(true);
@@ -69,7 +69,7 @@ export default function AddTenantPage() {
         name: form.name.trim(),
         room_no: isRental ? form.room_no.trim() : selectedRoom.room_no,
         room_id: isRental ? null : form.room_id,
-        bed_id: isRental || mode !== "bed" ? null : form.bed_id,
+        bed_id: isRental || selectedRoomMode !== "bed" ? null : form.bed_id,
         monthly_rent: Number(form.monthly_rent),
         phone: form.phone.trim() || null,
         move_in_date: form.move_in_date,
@@ -139,22 +139,24 @@ export default function AddTenantPage() {
               >
                 <option value="">Select a room</option>
                 {rooms.map((room) => {
-                  const full =
-                    mode === "room"
-                      ? occupiedRoomIds.has(room.id)
-                      : (room.beds || []).every((b) => occupiedBedIds.has(b.id));
+                  const roomIsBed = room.billing_mode === "bed";
+                  const full = roomIsBed
+                    ? (room.beds || []).every((b) => occupiedBedIds.has(b.id))
+                    : occupiedRoomIds.has(room.id);
                   return (
-                    <option key={room.id} value={room.id} disabled={mode === "room" && full}>
-                      Room {room.room_no}
-                      {mode === "room" && full ? " (occupied)" : ""}
-                      {mode === "bed" ? ` (${(room.beds || []).length - (room.beds || []).filter((b) => occupiedBedIds.has(b.id)).length} vacant beds)` : ""}
+                    <option key={room.id} value={room.id} disabled={!roomIsBed && full}>
+                      Room {room.room_no} ({roomIsBed ? "bed-wise" : "room-wise"})
+                      {!roomIsBed && full ? " — occupied" : ""}
+                      {roomIsBed
+                        ? ` — ${(room.beds || []).length - (room.beds || []).filter((b) => occupiedBedIds.has(b.id)).length} vacant beds`
+                        : ""}
                     </option>
                   );
                 })}
               </select>
             </Field>
 
-            {mode === "bed" && form.room_id ? (
+            {selectedRoomMode === "bed" && form.room_id ? (
               <Field label="Bed *">
                 <select
                   value={form.bed_id}

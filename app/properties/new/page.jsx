@@ -17,7 +17,6 @@ function AddPropertyForm() {
   const [error, setError] = useState("");
   const [form, setForm] = useState({
     type: "rental",
-    billing_mode: "room",
     name: "",
     address: "",
     total_units: "1",
@@ -28,7 +27,6 @@ function AddPropertyForm() {
     getProperty(editId).then((p) => {
       setForm({
         type: p.type,
-        billing_mode: p.billing_mode || "room",
         name: p.name,
         address: p.address,
         total_units: String(p.total_units),
@@ -38,7 +36,6 @@ function AddPropertyForm() {
   }, [editId, isEdit]);
 
   const isRental = form.type === "rental";
-  const hasBillingMode = form.type === "pg" || form.type === "hostel";
   const step1Valid =
     form.name.trim() && form.address.trim() && (!isRental || Number(form.total_units) > 0);
 
@@ -50,7 +47,6 @@ function AddPropertyForm() {
       name: form.name.trim(),
       address: form.address.trim(),
       total_units: isRental ? Number(form.total_units) : 1,
-      billing_mode: hasBillingMode ? form.billing_mode : null,
     };
     try {
       if (isEdit) {
@@ -112,33 +108,6 @@ function AddPropertyForm() {
               ) : null}
             </div>
 
-            {hasBillingMode ? (
-              <div className="mb-6">
-                <div className="font-heading mb-3 text-[13px] font-bold">How is it billed?</div>
-                <div className="grid grid-cols-2 gap-3">
-                  <TypeButton
-                    active={form.billing_mode === "bed"}
-                    onClick={() => setForm((f) => ({ ...f, billing_mode: "bed" }))}
-                    disabled={isEdit}
-                    emoji="🛏️"
-                    label="Bed-wise"
-                  />
-                  <TypeButton
-                    active={form.billing_mode === "room"}
-                    onClick={() => setForm((f) => ({ ...f, billing_mode: "room" }))}
-                    disabled={isEdit}
-                    emoji="🚪"
-                    label="Room-wise"
-                  />
-                </div>
-                <p className="mt-2 text-[11px] text-gray-400">
-                  Bed-wise: each bed in a shared room is billed separately. Room-wise: a private
-                  room is billed as one unit (e.g. two friends splitting one room).
-                  {isEdit ? " Can't be changed once rooms exist." : ""}
-                </p>
-              </div>
-            ) : null}
-
             <Field label="Property Name *">
               <input
                 value={form.name}
@@ -161,7 +130,8 @@ function AddPropertyForm() {
             ) : (
               <p className="mb-5 text-[11px] text-gray-400">
                 Rent is calculated from whatever you set per tenant once you add them — no need
-                to enter a total here.
+                to enter a total here. You&apos;ll choose bed-wise or room-wise billing for each
+                room individually on the next screen.
               </p>
             )}
 
@@ -189,9 +159,6 @@ function AddPropertyForm() {
                 label="Type"
                 value={form.type === "rental" ? "Rental" : form.type === "pg" ? "PG" : "Hostel"}
               />
-              {hasBillingMode ? (
-                <SummaryRow label="Billing" value={form.billing_mode === "bed" ? "Bed-wise" : "Room-wise"} />
-              ) : null}
               <SummaryRow label="Name" value={form.name} />
               {isRental ? <SummaryRow label="Units" value={form.total_units} /> : null}
               <SummaryRow label="Address" value={form.address} last />

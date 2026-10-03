@@ -70,7 +70,9 @@ export default function OccupancyPage() {
                     <div className="text-sm font-bold">{r.name}</div>
                     <div className="text-[11px] text-gray-500">
                       {TYPE_LABEL[r.type]}
-                      {r.mode ? ` • ${r.mode === "bed" ? "Bed-wise" : "Room-wise"}` : ""}
+                      {r.mode
+                        ? ` • ${r.mode === "bed" ? "Bed-wise" : r.mode === "room" ? "Room-wise" : "Mixed billing"}`
+                        : ""}
                     </div>
                   </div>
                   <div className="text-right">
