@@ -108,14 +108,15 @@ export default function PropertyDetailPage() {
           {confirmDelete === 1 ? (
             <p className="mb-3">
               This property has {tenants.length} active tenant{tenants.length === 1 ? "" : "s"}. Deleting it will
-              also remove their records. Continue?
+              mark {tenants.length === 1 ? "them" : "all of them"} as moved out — their payment history is kept,
+              not deleted. Continue?
             </p>
           ) : (
-            <p className="mb-3">Are you sure? This can&apos;t be undone from here.</p>
+            <p className="mb-3">Are you sure? The property is hidden from your dashboard, but its data is kept.</p>
           )}
           <div className="flex gap-2">
             <button onClick={handleDelete} className="rounded-lg bg-red-600 px-3 py-2 text-xs font-bold text-white">
-              {confirmDelete === 1 ? "Yes, continue" : "Delete permanently"}
+              {confirmDelete === 1 ? "Yes, continue" : "Delete property"}
             </button>
             <button onClick={() => setConfirmDelete(0)} className="rounded-lg border border-gray-300 px-3 py-2 text-xs font-bold">
               Cancel

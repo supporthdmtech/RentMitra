@@ -26,7 +26,8 @@ from another's. The only server route is the monthly rent-generation cron.
    [`supabase/migrations/0004_tenant_billing_start_date.sql`](supabase/migrations/0004_tenant_billing_start_date.sql), then
    [`supabase/migrations/0005_rooms_beds_billing_mode.sql`](supabase/migrations/0005_rooms_beds_billing_mode.sql), then
    [`supabase/migrations/0006_drop_property_total_rent.sql`](supabase/migrations/0006_drop_property_total_rent.sql), then
-   [`supabase/migrations/0007_per_room_billing_mode.sql`](supabase/migrations/0007_per_room_billing_mode.sql).
+   [`supabase/migrations/0007_per_room_billing_mode.sql`](supabase/migrations/0007_per_room_billing_mode.sql), then
+   [`supabase/migrations/0008_fix_orphaned_active_tenants.sql`](supabase/migrations/0008_fix_orphaned_active_tenants.sql).
 3. Go to **Project Settings → API** and copy:
    - `Project URL` → `NEXT_PUBLIC_SUPABASE_URL`
    - `anon public` key → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
@@ -143,6 +144,17 @@ handling since they always read live payment amounts.
 Mark Paid is available on both pending and overdue cycles — a tenant who pays early
 shouldn't have to wait until it's overdue to be marked. Remind only shows on overdue cycles
 (no nudge needed before something's actually due).
+
+## Deleting a property deactivates its tenants
+
+`softDeleteProperty()` now also flips all of that property's tenants to `status: 'inactive'`
+(the same state used for "moved out") — previously it only set `properties.deleted_at`,
+leaving tenants marked active forever, so they kept showing up in Payments/At-Risk/Dashboard
+after their property was "deleted." Payment **history** is never touched either way; it's
+preserved for Reports regardless of whether the tenant or property is still active. Active-
+obligation queries (`getAllPaymentsForOwner`, `getUnpaidPayments`) now explicitly require an
+active tenant at a non-deleted property (`!inner` join + filter), so this can't regress
+silently if a future query forgets to think about it.
 
 ## Payments tab: grouped by tenant, labeled by month
 
