@@ -4,6 +4,7 @@ import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createProperty, getProperty, updateProperty } from "@/lib/queries";
 import GradientHeader from "@/components/GradientHeader";
+import BottomTabBar from "@/components/BottomTabBar";
 
 function AddPropertyForm() {
   const router = useRouter();
@@ -67,7 +68,7 @@ function AddPropertyForm() {
   if (loading) return <p className="p-6 text-sm text-gray-500">Loading…</p>;
 
   return (
-    <div className="mx-auto min-h-screen max-w-md bg-white">
+    <div className="mx-auto min-h-screen max-w-md bg-white pb-24">
       <GradientHeader
         title={isEdit ? "Edit Property" : "Add Property"}
         subtitle={step === 1 ? "Step 1 of 2: Property Details" : "Step 2 of 2: Confirm"}
@@ -184,6 +185,7 @@ function AddPropertyForm() {
           </>
         )}
       </div>
+      <BottomTabBar />
     </div>
   );
 }

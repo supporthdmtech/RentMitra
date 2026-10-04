@@ -56,7 +56,7 @@ export default function AtRiskPage() {
         ) : (
           <>
             {critical.length > 0 ? (
-              <RiskGroup title="🔴 Critical (16-30+ days overdue)" items={critical} remindUrl={remindUrl} tier="critical" />
+              <RiskGroup title="🔴 Critical (16+ days overdue)" items={critical} remindUrl={remindUrl} tier="critical" />
             ) : null}
             {medium.length > 0 ? (
               <RiskGroup title="🟡 Medium (1-15 days overdue)" items={medium} remindUrl={remindUrl} tier="medium" />

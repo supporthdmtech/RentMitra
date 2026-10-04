@@ -15,6 +15,7 @@ import { formatCurrency, formatDate, formatMonthLabel } from "@/lib/dueDate";
 import { buildWhatsAppReminderUrl } from "@/lib/whatsapp";
 import GradientHeader from "@/components/GradientHeader";
 import PaymentCard from "@/components/PaymentCard";
+import BottomTabBar from "@/components/BottomTabBar";
 
 export default function TenantPaymentHistoryPage() {
   const { id } = useParams();
@@ -95,7 +96,7 @@ export default function TenantPaymentHistoryPage() {
   const totalPaid = payments.filter((p) => p.paid_at).reduce((s, p) => s + Number(p.amount_due), 0);
 
   return (
-    <div className="mx-auto min-h-screen max-w-md bg-white">
+    <div className="mx-auto min-h-screen max-w-md bg-white pb-24">
       <GradientHeader
         title={tenant.name}
         subtitle={`${tenant.property?.name} • Room ${tenant.room_no}${tenant.status === "inactive" ? " • Moved out" : ""}`}
@@ -232,6 +233,7 @@ export default function TenantPaymentHistoryPage() {
           )
         ) : null}
       </div>
+      <BottomTabBar />
     </div>
   );
 }

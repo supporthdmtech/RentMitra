@@ -117,8 +117,8 @@ export default function DashboardPage() {
       <div className="p-5">
         <div className="mb-3.5 flex items-center justify-between">
           <div className="font-heading text-sm font-bold">Your Properties</div>
-          <Link href="/properties/new" className="text-xs font-semibold text-blue-600">
-            + Add
+          <Link href="/properties/new" className="rounded-lg bg-blue-600 px-3.5 py-2 text-xs font-bold text-white">
+            + Add Property
           </Link>
         </div>
 

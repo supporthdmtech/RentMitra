@@ -48,27 +48,39 @@ export async function GET(request) {
       continue;
     }
 
-    const dueDate = latest ? nextDueDate(latest.due_date) : firstDueDate(billingAnchor(tenant));
+    let nextDate = latest ? nextDueDate(latest.due_date) : firstDueDate(billingAnchor(tenant));
 
-    // Only create the next cycle once its due date has actually arrived —
-    // don't generate cycles ahead of time.
-    if (latest && dueDate > today) continue;
+    // Skip if the next cycle is still in the future — UNLESS this is a
+    // brand-new tenant with no cycles at all, in which case always create
+    // their first record so there's something to track.
+    if (latest && nextDate > today) continue;
 
-    const { error: insertError } = await supabase.from("payments").upsert(
-      {
-        user_id: tenant.user_id,
-        tenant_id: tenant.id,
-        property_id: tenant.property_id,
-        due_date: dueDate,
-        amount_due: tenant.monthly_rent,
-      },
-      { onConflict: "tenant_id,due_date", ignoreDuplicates: true }
-    );
+    // Catch up ALL missing cycles in one pass (not just one per day). This
+    // means a cron that was offline for a week, or a tenant added months
+    // after move-in, recovers immediately on the next run.
+    while (true) {
+      const { error: insertError } = await supabase.from("payments").upsert(
+        {
+          user_id: tenant.user_id,
+          tenant_id: tenant.id,
+          property_id: tenant.property_id,
+          due_date: nextDate,
+          amount_due: tenant.monthly_rent,
+        },
+        { onConflict: "tenant_id,due_date", ignoreDuplicates: true }
+      );
 
-    if (insertError) {
-      errors.push({ tenant_id: tenant.id, error: insertError.message });
-    } else {
+      if (insertError) {
+        errors.push({ tenant_id: tenant.id, error: insertError.message });
+        break;
+      }
       created += 1;
+
+      // Advance to the next cycle. Stop once we'd cross into the future —
+      // don't generate upcoming cycles ahead of time.
+      const followingDate = nextDueDate(nextDate);
+      if (followingDate > today) break;
+      nextDate = followingDate;
     }
   }
 

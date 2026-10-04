@@ -14,6 +14,7 @@ import {
 import { formatCurrency, paymentStatus } from "@/lib/dueDate";
 import { isRoomBased, occupancyFor, roomBreakdown } from "@/lib/rooms";
 import StatusPill from "@/components/StatusPill";
+import BottomTabBar from "@/components/BottomTabBar";
 
 export default function PropertyDetailPage() {
   const { id } = useParams();
@@ -74,7 +75,7 @@ export default function PropertyDetailPage() {
   const breakdown = roomBreakdown(property, { rooms, tenants });
 
   return (
-    <div className="mx-auto min-h-screen max-w-md bg-white">
+    <div className="mx-auto min-h-screen max-w-md bg-white pb-24">
       <div className="bg-gradient-to-br from-orange-500 to-pink-500 px-5 pb-5 pt-4 text-white">
         <div className="mb-4 flex items-center justify-between">
           <Link href="/dashboard" className="flex h-9 w-9 items-center justify-center rounded-full bg-white/20 text-sm">
@@ -176,7 +177,7 @@ export default function PropertyDetailPage() {
                   </div>
                 ))}
               </div>
-              <Link href={`/properties/${id}/rooms`} className="mt-3 block text-[11px] font-bold text-blue-600">
+              <Link href={`/properties/${id}/rooms`} className="mt-3 flex items-center justify-center rounded-lg bg-blue-600 py-2.5 text-sm font-bold text-white">
                 Manage Rooms →
               </Link>
             </>
@@ -185,7 +186,7 @@ export default function PropertyDetailPage() {
 
         <div className="mt-1 flex items-center justify-between">
           <div className="font-heading text-sm font-bold">Tenants ({tenants.length})</div>
-          <Link href={`/properties/${id}/tenants/new`} className="text-xs font-bold text-blue-600">
+          <Link href={`/properties/${id}/tenants/new`} className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-bold text-white">
             + Add Tenant
           </Link>
         </div>
@@ -228,6 +229,7 @@ export default function PropertyDetailPage() {
           )}
         </div>
       </div>
+      <BottomTabBar />
     </div>
   );
 }

@@ -12,6 +12,7 @@ import {
 } from "@/lib/queries";
 import { roomBreakdown } from "@/lib/rooms";
 import GradientHeader from "@/components/GradientHeader";
+import BottomTabBar from "@/components/BottomTabBar";
 
 export default function ManageRoomsPage() {
   const { id: propertyId } = useParams();
@@ -87,7 +88,7 @@ export default function ManageRoomsPage() {
   }
 
   return (
-    <div className="mx-auto min-h-screen max-w-md bg-white">
+    <div className="mx-auto min-h-screen max-w-md bg-white pb-24">
       <GradientHeader
         title="Manage Rooms"
         subtitle={property.name}
@@ -224,6 +225,7 @@ export default function ManageRoomsPage() {
           </Link>
         ) : null}
       </div>
+      <BottomTabBar />
     </div>
   );
 }

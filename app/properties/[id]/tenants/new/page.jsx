@@ -7,6 +7,7 @@ import { createTenant, getProperty, getRoomsForProperty, getTenantsByProperty } 
 import { todayIso } from "@/lib/dueDate";
 import { isRoomBased } from "@/lib/rooms";
 import GradientHeader from "@/components/GradientHeader";
+import BottomTabBar from "@/components/BottomTabBar";
 
 export default function AddTenantPage() {
   const { id: propertyId } = useParams();
@@ -89,7 +90,7 @@ export default function AddTenantPage() {
 
   if (!isRental && rooms.length === 0) {
     return (
-      <div className="mx-auto min-h-screen max-w-md bg-white">
+      <div className="mx-auto min-h-screen max-w-md bg-white pb-24">
         <GradientHeader title="Add Tenant" gradient="orange" backHref={`/properties/${propertyId}`} />
         <div className="p-6">
           <p className="mb-4 text-sm text-gray-500">
@@ -102,12 +103,13 @@ export default function AddTenantPage() {
             Manage Rooms
           </Link>
         </div>
+        <BottomTabBar />
       </div>
     );
   }
 
   return (
-    <div className="mx-auto min-h-screen max-w-md bg-white">
+    <div className="mx-auto min-h-screen max-w-md bg-white pb-24">
       <GradientHeader title="Add Tenant" gradient="orange" backHref={`/properties/${propertyId}`} />
 
       <div className="p-6">
@@ -217,6 +219,7 @@ export default function AddTenantPage() {
           {saving ? "Saving…" : "Save Tenant"}
         </button>
       </div>
+      <BottomTabBar />
     </div>
   );
 }
