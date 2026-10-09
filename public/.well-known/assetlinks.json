@@ -1,12 +1,8 @@
-[
-  {
-    "relation": ["delegate_permission/common.handle_all_urls"],
-    "target": {
-      "namespace": "android_app",
-      "package_name": "REPLACE_WITH_YOUR_PACKAGE_NAME",
-      "sha256_cert_fingerprints": [
-        "REPLACE_WITH_SHA256_FROM_PWABUILDER"
-      ]
-    }
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "app.vercel.rent_mitra_xi.twa",
+    "sha256_cert_fingerprints": ["95:9D:3C:81:F3:D1:E7:E3:B3:A7:43:49:44:60:B6:3C:9F:E3:FD:16:AA:7B:1E:54:FE:90:FA:05:EE:4A:11:C6"]
   }
-]
+}]
