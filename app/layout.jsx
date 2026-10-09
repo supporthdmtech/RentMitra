@@ -5,11 +5,18 @@ export const metadata = {
   title: "RentMitra",
   description: "Manage properties, track rent, get paid.",
   icons: { icon: "/favicon.svg" },
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "RentMitra",
+  },
 };
 
 export const viewport = {
   width: "device-width",
   initialScale: 1,
+  themeColor: "#4f46e5",
 };
 
 export default function RootLayout({ children }) {
