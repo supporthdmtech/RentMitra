@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 
-const PUBLIC_PATHS = ["/login"];
+const PUBLIC_PATHS = ["/login", "/privacy"];
 
 export async function middleware(request) {
   const response = NextResponse.next();
@@ -53,6 +53,6 @@ export const config = {
      * (it manages its own redirect before a session cookie exists), and
      * API routes (the cron route protects itself with CRON_SECRET).
      */
-    "/((?!_next/static|_next/image|favicon.ico|auth/callback|api/).*)",
+    "/((?!_next/static|_next/image|favicon\\.ico|favicon\\.svg|auth/callback|api/|manifest|icons/|\\.well-known/).*)",
   ],
 };
