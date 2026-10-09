@@ -5,7 +5,6 @@ export const metadata = {
   title: "RentMitra",
   description: "Manage properties, track rent, get paid.",
   icons: { icon: "/favicon.svg" },
-  manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
